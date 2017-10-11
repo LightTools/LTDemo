@@ -45,6 +45,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Mavensmate
+*.sublime-project
+config
 config/.debug
 config/.describe
 config/.local_store
