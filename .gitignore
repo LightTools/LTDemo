@@ -55,3 +55,8 @@ config/.local_store
 config/.lightning
 config/.settings
 config/.org_metadata
+
+# HaoIDE
+.config
+.deploy
+.templates

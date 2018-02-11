@@ -1,0 +1,13 @@
+<apex:page sidebar="false" id="demoApp">
+    <!-- create Demo application -->
+    <apex:includeLightning />
+    <script>
+    	$Lightning.use('c:demoApp', function() {
+			$Lightning.createComponent(
+				'c:demoContainer',
+                null,
+                'demoApp'
+            );
+        });
+    </script>
+</apex:page>

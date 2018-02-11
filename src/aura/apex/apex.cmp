@@ -1,0 +1,5 @@
+<aura:component extensible="true"
+                abstract="true"
+                description="This is a common component for other component with Apex controller.">
+    <!-- child's body -->
+</aura:component>
