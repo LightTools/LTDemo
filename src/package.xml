@@ -12,4 +12,5 @@
         <members>*</members>
         <name>AuraDefinitionBundle</name>
     </types>
+    <version>42.0</version>
 </Package>
