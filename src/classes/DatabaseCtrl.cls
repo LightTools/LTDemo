@@ -36,13 +36,75 @@ public with sharing class DatabaseCtrl {
             return this;
         }
 
-        public DatabaseException noFieldsForQuery(String objectName) {
-            this.setMessage(String.format(
-                'Fields for the query were not defined or object {0} is not accessible.',
-                new List<String>{ objectName }
-            ));
-            return this;
+    }
+
+    /** 
+      * @description Represent of object field for query.
+      * @author Sergey Chepurnenko
+    */
+    private class QueryField {
+
+        // class variables
+
+        private String field;        
+        private DescribeSObjectResult objectDescribe;
+
+        // class constructors
+
+        /**
+          * @description Constructor for the class.
+          * @param String field - name of field.
+          * @param DescribeSObjectResult objectDescribe - describe of sObject.
+        */
+        public QueryField(String field, DescribeSObjectResult objectDescribe) {
+            this.field = field;
+            this.objectDescribe = objectDescribe;
         }
+
+        // class public methods
+
+        /**
+          * @description Method to check access for a field.
+          * @return Boolean - access state, true/false.
+        */
+        public Boolean isAccessible() {
+            // by default result will be false
+            Boolean result = false;
+            // get fields map from describe
+            Map<String, sObjectField> objectFields = this.objectDescribe.fields.getMap();
+            // validate field access
+            if (this.field.contains('.')) {
+                // in case of referecne, get first field from chain
+                String objectReference = this.field.substringBefore('.').replace('__r', '__c');
+                if (objectFields.containsKey(objectReference)) {
+                    // get reference field describe
+                    DescribeFieldResult objectReferenceDescribe = objectFields.get(objectReference).getDescribe();
+                    // if this reference field is Reference and is accessible, we can check access for other fields in the chain
+                    if (objectReferenceDescribe.getType() == DisplayType.Reference &&
+                           objectReferenceDescribe.isAccessible()) {
+                        // get the other fields from the chain
+                        String objectReferenceFields = this.field.substringAfter('.');
+                        // check access for all references
+                        for (sObjectType objectReferenceType : objectReferenceDescribe.getReferenceTo()) {
+                            result = new QueryField(
+                                objectReferenceFields,
+                                objectReferenceType.getDescribe()
+                            ).isAccessible();
+                            // in case of false we don't need to check other references
+                            if (result == false) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else if (objectFields.containsKey(this.field)) {
+                // for normal field just check access rights
+                result = objectFields.get(this.field).getDescribe().isAccessible();
+            }
+            // return access state
+            return result;
+        }
+
     }
 
     /** 
@@ -171,6 +233,8 @@ public with sharing class DatabaseCtrl {
             // validate permission rights for the object
             if (!result.isAccessible()) {
                 throw new DatabaseException().objectNotAccessible(result.getName());
+            } else if (!result.isQueryable()) {
+                throw new DatabaseException().objectNotAccessible(result.getName());
             }
             return result;
         }
@@ -183,21 +247,18 @@ public with sharing class DatabaseCtrl {
             // parse config fields
             for (Object configField : (List<Object>)this.get(this.KEY_FIELDS)) {
                 String currentConfigField = String.valueOf(configField).trim();
+                QueryField currentQueryField = new QueryField(currentConfigField, objectDescribe);
                 // FLS validation
-                // TODO: add validation for reference fields
-                if (currentConfigField.contains('.') ||
-                        (objectFields.containsKey(currentConfigField) &&
-                            objectFields.get(currentConfigField).getDescribe().isAccessible())) {
+                if (currentQueryField.isAccessible()) {
                     // add field to query
                     queryFields.add(currentConfigField);
-                }   
+                }
             }
             // get child queries
             String queryChilds = this.getQueryChilds(objectDescribe);
             // validate query fields
-            if (queryFields.isEmpty() &&
-                    String.isBlank(queryChilds)) {
-                throw new DatabaseException().noFieldsForQuery(objectDescribe.getName());
+            if (queryFields.isEmpty()) {
+                queryFields.add('Id'); // just add Id field for the query, because I don't want to throw exception for this case
             }
             // create result
             return String.join(queryFields, ', ') +
