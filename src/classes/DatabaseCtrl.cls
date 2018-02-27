@@ -36,6 +36,14 @@ public with sharing class DatabaseCtrl {
             return this;
         }
 
+        public DatabaseException objectNotQueryable(String objectName) {
+            this.setMessage(String.format(
+                'Object {0} is not queryable.',
+                new List<String>{ objectName }
+            ));
+            return this;
+        }
+
     }
 
     /** 
@@ -43,6 +51,10 @@ public with sharing class DatabaseCtrl {
       * @author Sergey Chepurnenko
     */
     private class QueryField {
+
+        // class constants
+
+        private final String REFERENCE_SEPARATOR = '.';
 
         // class variables
 
@@ -73,9 +85,9 @@ public with sharing class DatabaseCtrl {
             // get fields map from describe
             Map<String, sObjectField> objectFields = this.objectDescribe.fields.getMap();
             // validate field access
-            if (this.field.contains('.')) {
+            if (this.field.contains(this.REFERENCE_SEPARATOR)) {
                 // in case of referecne, get first field from chain
-                String objectReference = this.field.substringBefore('.').replace('__r', '__c');
+                String objectReference = this.field.substringBefore(this.REFERENCE_SEPARATOR).replace('__r', '__c');
                 if (objectFields.containsKey(objectReference)) {
                     // get reference field describe
                     DescribeFieldResult objectReferenceDescribe = objectFields.get(objectReference).getDescribe();
@@ -83,7 +95,7 @@ public with sharing class DatabaseCtrl {
                     if (objectReferenceDescribe.getType() == DisplayType.Reference &&
                            objectReferenceDescribe.isAccessible()) {
                         // get the other fields from the chain
-                        String objectReferenceFields = this.field.substringAfter('.');
+                        String objectReferenceFields = this.field.substringAfter(this.REFERENCE_SEPARATOR);
                         // check access for all references
                         for (sObjectType objectReferenceType : objectReferenceDescribe.getReferenceTo()) {
                             result = new QueryField(
@@ -122,12 +134,15 @@ public with sharing class DatabaseCtrl {
         private final String KEY_OFFSET = 'offset';
         private final String KEY_LIMIT = 'limit';
         private final String KEY_CHILDS = 'childs';
+        private final String KEY_CRUD = 'crud';
 
         private final String SOQL_SELECT_TEMPLATE = 'SELECT {0} FROM {1}';
         private final String SOQL_WHERE_TEMPLATE = 'WHERE {0}';
         private final String SOQL_ORDERBY_TEMPLATE = 'ORDER BY {0}';
         private final String SOQL_OFFSET_TEMPLATE = 'OFFSET {0}';
         private final String SOQL_LIMIT_TEMPLATE = 'LIMIT {0}';
+
+        private final String SOQL_FIELDS_SEPARATOR = ', ';
 
         // class variables
 
@@ -140,6 +155,19 @@ public with sharing class DatabaseCtrl {
             get {
                 return this.parentDescribe != null;
             }
+        }
+
+        private Boolean enforceCRUD {
+            get {
+                if (this.enforceCRUD == null) {
+                    // get CRUD state from config
+                    this.enforceCRUD = this.containsKey(this.KEY_CRUD) ?
+                                            Boolean.valueOf(this.get(this.KEY_CRUD)) :
+                                                true;
+                }
+                return this.enforceCRUD;
+            }
+            private set;
         }
 
         // class constructors
@@ -231,9 +259,9 @@ public with sharing class DatabaseCtrl {
                 }
             }
             // validate permission rights for the object
-            if (!result.isAccessible()) {
-                throw new DatabaseException().objectNotAccessible(result.getName());
-            } else if (!result.isQueryable()) {
+            if (!result.isQueryable()) {
+                throw new DatabaseException().objectNotQueryable(result.getName());
+            } else if (this.enforceCRUD && !result.isAccessible()) {
                 throw new DatabaseException().objectNotAccessible(result.getName());
             }
             return result;
@@ -261,11 +289,11 @@ public with sharing class DatabaseCtrl {
                 queryFields.add('Id'); // just add Id field for the query, because I don't want to throw exception for this case
             }
             // create result
-            return String.join(queryFields, ', ') +
+            return String.join(queryFields, this.SOQL_FIELDS_SEPARATOR) +
                     // add child queries to the main query as fields
                     (!queryFields.isEmpty() &&
                         String.isNotBlank(queryChilds) ?
-                            ', ' + queryChilds : '');
+                            this.SOQL_FIELDS_SEPARATOR + queryChilds : '');
 
         }
 
@@ -280,7 +308,7 @@ public with sharing class DatabaseCtrl {
                 }
                 if (!queryChilds.isEmpty()) {
                     // set result
-                    result = '(' + String.join(queryChilds, '), (') + ')';
+                    result = '(' + String.join(queryChilds, ')' + this.SOQL_FIELDS_SEPARATOR + '(') + ')';
                 }
             }
             return result;
