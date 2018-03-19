@@ -6,24 +6,29 @@
             JSON.stringify({
                 "object": "Demo__c",
                 "fields": [
-                    "Name"
+                    "Id",
+                    "Name",
+                    "CreatedDate"
                 ],
-                "filters": [],
-                "sort": [
-                    "Name"
-                ],
+                "functions": {
+                    "CreatedDate": "FORMAT({0})"
+                },
+                "filter": "",
+                "grouping": "",
+                "sort": "",
                 "offset": 0,
                 "limit": 5000,
+                "options": "",
+                "crud": true,
+                "fls": true,
+                "sharing": true,
                 "childs": [{
                     "object": "DemoChilds__r",
                     "fields": [
                         "Name"
                     ],
-                    "filters": [],
-                    "sort": [
-                        "Name"
-                    ],
-                    "limit": 5000
+                    "limit": 5000,
+                    "crud": true
                 }]
             }, null, 4)
         );

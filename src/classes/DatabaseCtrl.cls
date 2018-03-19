@@ -244,13 +244,28 @@ public with sharing class DatabaseCtrl {
         private String getQueryFields(DescribeSObjectResult objectDescribe) {
             // create a new list of fields
             List<String> queryFields = new List<String>();
-            // parse config fields
-            for (Object configField : (List<Object>)this.get(this.KEY_FIELDS)) {
-                String currentConfigField = String.valueOf(configField).trim();
-                // FLS validation
-                if (!this.enforceFLS || Utils.isAccessible(currentConfigField, objectDescribe)) {
-                    // add field to query
-                    queryFields.add(currentConfigField);
+            if (this.containsKey(this.KEY_FIELDS)) {
+                // get functions from config
+                Map<String, Object> configFunctions = (Map<String, Object>)this.get(this.KEY_FUNCTIONS);
+                // parse config fields
+                for (Object configField : (List<Object>)this.get(this.KEY_FIELDS)) {
+                    String currentConfigField = String.valueOf(configField).trim();
+                    // FLS validation
+                    if (!this.enforceFLS || Utils.isAccessible(currentConfigField, objectDescribe)) {
+                        // get function for current field
+                        if (Utils.isNotNull(configFunctions) &&
+                                configFunctions.containsKey(currentConfigField)) {
+                            // wrap field
+                            currentConfigField = String.format(
+                                (String)configFunctions.get(currentConfigField),
+                                new List<String> {
+                                    currentConfigField
+                                }
+                            );
+                        }
+                        // add field to query
+                        queryFields.add(currentConfigField);
+                    }
                 }
             }
             // get child queries
