@@ -19,16 +19,58 @@
         // select action
         switch (sender.get("v.name")) {
             case "databaseQuery":
-                component.find("database").query(
+                component.find("database").buildSOQL(
                     JSON.parse(component.get("v.databaseQueryConfig")),
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
+                            // set debug result
                             component.set(
-                                "v.databaseQueryResponse",
-                                helper.parseResponse(response)
+                                "v.databaseQueryDebug",
+                                helper.parseDebug(response)
                             );
-                            // hide spinner
-                            toggleSpinner(false);
+                            // get records
+                            component.find("database").query(
+                                JSON.parse(component.get("v.databaseQueryConfig")),
+                                $A.getCallback(function(response) {
+                                    if (component.isValid()) {
+                                        // set query result
+                                        component.set(
+                                            "v.databaseQueryResponse",
+                                            helper.parseResponse(response)
+                                        );
+                                        // hide spinner
+                                        toggleSpinner(false);
+                                    }
+                                })
+                            );
+                        }
+                    })
+                );
+                break;
+            case "databaseSearch":
+                component.find("database").buildSOSL(
+                    JSON.parse(component.get("v.databaseSearchConfig")),
+                    $A.getCallback(function(response) {
+                        if (component.isValid()) {
+                            // set debug result
+                            component.set(
+                                "v.databaseSearchDebug",
+                                helper.parseDebug(response)
+                            );
+                            // get records
+                            component.find("database").search(
+                                JSON.parse(component.get("v.databaseSearchConfig")),
+                                $A.getCallback(function(response) {
+                                    if (component.isValid()) {
+                                        component.set(
+                                            "v.databaseSearchResponse",
+                                            helper.parseResponse(response)
+                                        );
+                                        // hide spinner
+                                        toggleSpinner(false);
+                                    }
+                                })
+                            );
                         }
                     })
                 );
