@@ -1,4 +1,33 @@
 ({
+    // build methods
+
+    /**
+      * @description Method to build SOQL query string.
+      * @param Object component - component reference.
+      * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
+      * @param Object callback - external function to handle response from server.
+    */
+    buildSOQL : function(component, config, callback) {
+        // call apex method from controller
+        this.callApex(component, "buildSOQL", callback, {
+            "config": JSON.stringify(config)
+        });
+    },
+    /**
+      * @description Method to build SOSL query string.
+      * @param Object component - component reference.
+      * @param Object config - this object should contain search text, search entities and query conditions for SOSL.
+      * @param Object callback - external function to handle response from server.
+    */
+    buildSOSL : function(component, config, callback) {
+        // call apex method from controller
+        this.callApex(component, "buildSOSL", callback, {
+            "config": JSON.stringify(config)
+        });
+    },
+
+    // data methods
+
     /**
       * @description Method to create callback for query and search.
       * @param Object component - component reference.
@@ -45,7 +74,16 @@
                             !$A.util.isEmpty(response.data)) {
                         // parse data items
                         JSON.parse(response.data).forEach(function(dataItem) {
-                            records.push(createRecord(dataItem));
+                            // for search result
+                            if (dataItem.hasOwnProperty("length")) {
+                                let dataItemChilds = [];
+                                dataItem.forEach(function(dataItemChild) {
+                                    dataItemChilds.push(createRecord(dataItemChild));
+                                });
+                                records.push(dataItemChilds);
+                            } else { // for query result
+                                records.push(createRecord(dataItem));
+                            }
                         });
                     }
                 } catch(e) {
@@ -73,6 +111,18 @@
     query : function(component, config, callback) {
         // call apex method from controller
         this.callApex(component, "query", this.callback(component, callback), {
+            "config": JSON.stringify(config)
+        });
+    },
+    /**
+      * @description Method to get records from server using SOSL query.
+      * @param Object component - component reference.
+      * @param Object config - this object should contain search text, search entities and query conditions for SOSL.
+      * @param Object callback - external function to handle response from server.
+    */
+    search : function(component, config, callback) {
+        // call apex method from controller
+        this.callApex(component, "search", this.callback(component, callback), {
             "config": JSON.stringify(config)
         });
     }

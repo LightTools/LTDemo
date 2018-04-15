@@ -32,7 +32,42 @@
                 }]
             }, null, 4)
         );
+        // set default config for database search
+        component.set(
+            "v.databaseSearchConfig",
+            JSON.stringify({
+                "filter": "Demo",
+                "group": "All",
+                "entities": [{
+                    "object": "Demo__c",
+                    "fields": [
+                        "Name",
+                        "CreatedDate"
+                    ],
+                    "functions": {
+                        "CreatedDate": "FORMAT({0})"
+                    },
+                    "options": ""
+                }],
+                "options": "",
+                "crud": true,
+                "fls": true,
+                "sharing": true
+            }, null, 4)
+        );
 	},
+    parseDebug : function(response) {
+        let result = null;
+        if (response.isSuccess) {
+            result = response.data;
+        } else {
+            result = JSON.stringify(
+                response.messages.slice(),
+                null, 4
+            );
+        }
+        return result;
+    },
     parseResponse : function(response) {
         let result = null;
         if (response.isSuccess) {

@@ -2,11 +2,26 @@
                 controller="DatabaseCtrl"
                 description="This component contains methods to work with Salesforce database.">
 
-	<!-- component methods -->
-	<aura:method name="query" action="{! c.callQuery }" description="Method to get records from server using SOQL query."> 
-	    <aura:attribute name="config" type="Object" required="true" description="This object should contain object name, object fields and query conditions for SOQL." />
+    <!-- build methods -->
+    <aura:method name="buildSOQL" action="{! c.callBuildSOQL }" description="Method to build SOQL query string."> 
+        <aura:attribute name="config" type="Object" required="true" description="This object should contain object name, object fields and query conditions for SOQL." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
-	</aura:method>
-	<!-- /component methods -->
+    </aura:method>
+    <aura:method name="buildSOSL" action="{! c.callBuildSOSL }" description="Method to build SOSL query string."> 
+        <aura:attribute name="config" type="Object" required="true" description="This object should contain search text, search entities and query conditions for SOSL." />
+        <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
+    </aura:method>
+    <!-- /build methods -->
+
+    <!-- data methods -->
+    <aura:method name="query" action="{! c.callQuery }" description="Method to get records from server using SOQL query."> 
+        <aura:attribute name="config" type="Object" required="true" description="This object should contain object name, object fields and query conditions for SOQL." />
+        <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
+    </aura:method>
+    <aura:method name="search" action="{! c.callSearch }" description="Method to get records from server using SOSL query."> 
+        <aura:attribute name="config" type="Object" required="true" description="This object should contain search text, search entities and query conditions for SOSL." />
+        <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
+    </aura:method>
+    <!-- /data methods -->
 
 </aura:component>

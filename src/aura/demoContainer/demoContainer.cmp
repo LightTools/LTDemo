@@ -2,7 +2,11 @@
     
     <!-- component variables -->
     <aura:attribute name="databaseQueryConfig" type="String" access="private"/>
+    <aura:attribute name="databaseQueryDebug" type="String" access="private"/>
     <aura:attribute name="databaseQueryResponse" type="String" access="private"/>
+    <aura:attribute name="databaseSearchConfig" type="String" access="private"/>
+    <aura:attribute name="databaseSearchDebug" type="String" access="private"/>
+    <aura:attribute name="databaseSearchResponse" type="String" access="private"/>
     <!-- component variables -->
 
     <!-- component handle events -->
@@ -50,8 +54,43 @@
                                 </lightning:layoutItem>
                             </lightning:layout>
                         </lightning:tab>
+                        <lightning:tab label="Debug">
+                            <lightning:textarea value="{! v.databaseQueryDebug }"
+                                    label="Debug"
+                                    class="label-hidden" />
+                        </lightning:tab>
                         <lightning:tab label="Response">
                             <lightning:textarea value="{! v.databaseQueryResponse }"
+                                    label="Response"
+                                    class="label-hidden" />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </lightning:tab>
+                <lightning:tab label="Search">
+                    <lightning:tabset variant="vertical">
+                        <lightning:tab label="Config">
+                            <lightning:layout multipleRows="true">
+                                <lightning:layoutItem size="12">
+                                    <lightning:textarea value="{! v.databaseSearchConfig }"
+                                            label="Config"
+                                            class="label-hidden" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12"
+                                        class="slds-p-vertical_x-small">
+                                    <lightning:button label="Search"
+                                            name="databaseSearch"
+                                            onclick="{! c.action }"
+                                            class="slds-float_right" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:tab>
+                        <lightning:tab label="Debug">
+                            <lightning:textarea value="{! v.databaseSearchDebug }"
+                                    label="Debug"
+                                    class="label-hidden" />
+                        </lightning:tab>
+                        <lightning:tab label="Response">
+                            <lightning:textarea value="{! v.databaseSearchResponse }"
                                     label="Response"
                                     class="label-hidden" />
                         </lightning:tab>

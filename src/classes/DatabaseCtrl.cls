@@ -55,7 +55,9 @@ public with sharing class DatabaseCtrl {
         // class constants
 
         private final String KEY_OBJECT = 'object';
+        private final String KEY_ENTITIES = 'entities';
         private final String KEY_FIELDS = 'fields';
+        private final String KEY_GROUP = 'group';
         private final String KEY_FILTER = 'filter';
         private final String KEY_FUNCTIONS = 'functions';
         private final String KEY_GROUPING = 'grouping';
@@ -69,6 +71,7 @@ public with sharing class DatabaseCtrl {
         private final String KEY_CHILDS = 'childs';
 
         private final String TEMPLATE_SELECT = 'SELECT {0} FROM {1}';
+        private final String TEMPLATE_FIND = 'FIND {0}{1}{2} IN {3} FIELDS RETURNING';
         private final String TEMPLATE_WHERE = 'WHERE {0}';
         private final String TEMPLATE_GROUPBY = 'GROUP BY {0}';
         private final String TEMPLATE_ORDERBY = 'ORDER BY {0}';
@@ -76,9 +79,12 @@ public with sharing class DatabaseCtrl {
         private final String TEMPLATE_LIMIT = 'LIMIT {0}';
         private final String TEMPLATE_OPTIONS = '{0}';
         private final String TEMPLATE_CHILD = '({0})';
+        private final String TEMPLATE_ENTITY = '({0})';
 
         private final String SEPARATOR_FIELDS = ', ';
+        private final String SEPARATOR_OBJECTS = ', ';
         private final String SEPARATOR_CHILDS = '), (';
+        private final String SEPARATOR_QUOTES = '\'';
 
         private final String FIELD_ID = 'Id';
 
@@ -169,7 +175,7 @@ public with sharing class DatabaseCtrl {
           * @description Method to get dynamic query for Database.query() method.
           * @return String - query string.
         */
-        public String getQuery() {
+        public String getSOQLQuery() {
             // get object describe for query
             DescribeSObjectResult queryObjectDescribe = this.getObjectDescribe();
             // create result query
@@ -190,6 +196,39 @@ public with sharing class DatabaseCtrl {
             resultQuery += this.getQueryLimit();
             // add offset to the query
             resultQuery += this.getQueryOffset();
+            // add options to the query
+            resultQuery += this.getQueryOptions();
+            // debug query string
+            Utils.debug(DatabaseCtrl.class.getName(), resultQuery);
+            // return query
+            return resultQuery;
+        }
+
+        /**
+          * @description Method to get dynamic query for Search.query() method.
+          * @return String - query string.
+        */
+        public String getSOSLQuery() {
+            // create result query
+            String resultQuery = String.format(
+                this.TEMPLATE_FIND,
+                new List<String> {
+                    // search filter
+                    this.SEPARATOR_QUOTES,
+                    this.createQueryPart(
+                        this.KEY_FILTER,
+                        this.TEMPLATE_OPTIONS
+                    ).trim(),
+                    this.SEPARATOR_QUOTES,
+                    // search group
+                    this.createQueryPart(
+                        this.KEY_GROUP,
+                        this.TEMPLATE_OPTIONS
+                    )
+                }
+            );
+            // add search entities to the query
+            resultQuery += this.getSearchEntities();
             // add options to the query
             resultQuery += this.getQueryOptions();
             // debug query string
@@ -290,10 +329,10 @@ public with sharing class DatabaseCtrl {
                 List<String> queryChilds = new List<String>();
                 for (Object configChild : (List<Object>)this.get(this.KEY_CHILDS)) {
                     // add child query
-                    queryChilds.add(new QueryConfig(configChild, objectDescribe).getQuery());
+                    queryChilds.add(new QueryConfig(configChild, objectDescribe).getSOQLQuery());
                 }
                 if (!queryChilds.isEmpty()) {
-                    // set result
+                    // create result
                     result = String.format(
                         this.TEMPLATE_CHILD,
                         new List<String> {
@@ -360,7 +399,7 @@ public with sharing class DatabaseCtrl {
                     result = Utils.WHITESPACE + String.format(
                         template,
                         new List<String> {
-                            configPart
+                            String.escapeSingleQuotes(configPart)
                         }
                     );
                 }
@@ -368,6 +407,78 @@ public with sharing class DatabaseCtrl {
             return result;
         }
 
+        private String getSearchEntities() {
+            // create a new list of entities
+            List<String> searchEntities = new List<String>();
+            if (this.containsKey(this.KEY_ENTITIES)) {
+                for (Object configEntity : (List<Object>)this.get(this.KEY_ENTITIES)) {
+                    if (Utils.isNotNull(configEntity)) {
+                        searchEntities.add(this.createSearchEntity(
+                            new Wrapper(configEntity)
+                        ));
+                    }
+                }
+            }
+            // create result
+            return Utils.WHITESPACE + String.join(searchEntities, this.SEPARATOR_OBJECTS);
+        }
+
+        private String createSearchEntity(Wrapper config) {
+            DescribeSObjectResult objectDescribe;
+            // get object name from config
+            String configObject = String.valueOf(config.get(this.KEY_OBJECT));
+            // validate entity object
+            if (Utils.getGlobalDescribe().containsKey(configObject)) {
+                objectDescribe = Utils.getDescribe(configObject);
+            } else {
+                throw new DatabaseException().objectNotFound(configObject);
+            }
+            // validate permission rights for the object
+            if (!objectDescribe.isQueryable()) {
+                throw new DatabaseException().objectNotQueryable(objectDescribe.getName());
+            } else if (this.enforceCRUD && !objectDescribe.isAccessible()) {
+                throw new DatabaseException().objectNotAccessible(objectDescribe.getName());
+            }
+            // validate entity fields
+            List<String> entityFields = new List<String>();
+            if (config.containsKey(this.KEY_FIELDS)) {
+                // get functions from config
+                Map<String, Object> configFunctions = (Map<String, Object>)config.get(this.KEY_FUNCTIONS);
+                // parse config fields
+                for (Object configField : (List<Object>)config.get(this.KEY_FIELDS)) {
+                    String currentConfigField = String.valueOf(configField).trim();
+                    // FLS validation
+                    if (!this.enforceFLS || Utils.isAccessible(currentConfigField, objectDescribe)) {
+                        // get function for current field
+                        if (Utils.isNotNull(configFunctions) &&
+                                configFunctions.containsKey(currentConfigField)) {
+                            // wrap field
+                            currentConfigField = String.format(
+                                (String)configFunctions.get(currentConfigField),
+                                new List<String> {
+                                    currentConfigField
+                                }
+                            );
+                        }
+                        // add current field to 
+                        entityFields.add(currentConfigField);
+                    }
+                }
+            }
+            // create result
+            return objectDescribe.getName() + (
+                !entityFields.isEmpty() ? String.format(
+                    this.TEMPLATE_ENTITY,
+                    new List<String> {
+                        // add entity fields and options to result
+                        String.join(entityFields, SEPARATOR_FIELDS) + this.createQueryPart(
+                            this.KEY_OPTIONS,
+                            this.TEMPLATE_OPTIONS
+                        )
+                    }
+                ) : Utils.EMPTY_STRING
+            );
+        }
     }
 
     /** 
@@ -378,15 +489,57 @@ public with sharing class DatabaseCtrl {
 
         /**
           * @description Database.query() method without sharing.
-          * @return List - records from a database.
+          * @return Object - result from a database.
         */
-        public List<sObject> callQuery(String queryString) {
+        public Object callQuery(String queryString) {
             return Database.query(queryString);
+        }
+
+        /**
+          * @description Search.query() method without sharing.
+          * @return Object - result from a database.
+        */
+        public Object callSearch(String queryString) {
+            return Search.query(queryString);
         }
 
     } 
 
     // class methods
+
+    /**
+      * @description Method to build SOQL query string.
+      * @param String config - serialized javascript object. This object should contain object name, object fields and query conditions for SOQL.
+      * @return String - serialized javascript object with SOQL results.
+    */
+    @AuraEnabled
+    public static String buildSOQL(String config) {
+        String result;
+        try {
+            // create result
+            result = new QueryConfig(config).getSOQLQuery();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());    
+        }
+        return result;
+    }
+
+    /**
+      * @description Method to build SOSL query string.
+      * @param String config - serialized javascript object. This object should contain object name, object fields and query conditions for SOQL.
+      * @return String - serialized javascript object with SOQL results.
+    */
+    @AuraEnabled
+    public static String buildSOSL(String config) {
+        String result;
+        try {
+            // create result
+            result = new QueryConfig(config).getSOSLQuery();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());    
+        }
+        return result;
+    }
 
     /**
       * @description Method to get records from database using SOQL query.
@@ -404,14 +557,40 @@ public with sharing class DatabaseCtrl {
                 // check sharing config
                 queryConfigWrapper.enforceSharing ?
                 // query with sharing
-                Database.query(queryConfigWrapper.getQuery()) :
+                Database.query(queryConfigWrapper.getSOQLQuery()) :
                 // query without sharing
-                new DatabaseWithoutSharing().callQuery(queryConfigWrapper.getQuery())
+                new DatabaseWithoutSharing().callQuery(queryConfigWrapper.getSOQLQuery())
             );
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());    
         }
     	return result;
+    }
+
+    /**
+      * @description Method to search records in database using SOSL query.
+      * @param String config - serialized javascript object.
+      * @return String - serialized javascript object with SOSL results.
+    */
+    @AuraEnabled
+    public static String search(String config) {
+        String result;
+        try {
+            // create query wrapper
+            QueryConfig queryConfigWrapper = new QueryConfig(config);
+            // create result
+            result = JSON.serialize(
+                // check sharing config
+                queryConfigWrapper.enforceSharing ?
+                // query with sharing
+                Search.query(queryConfigWrapper.getSOSLQuery()) :
+                // query without sharing
+                new DatabaseWithoutSharing().callSearch(queryConfigWrapper.getSOSLQuery())
+            );
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());    
+        }
+        return result;
     }
 
 }
