@@ -1,4 +1,19 @@
 ({
+    // describe methods
+
+    /**
+      * @description Method to build SOQL query string.
+      * @param Object component - component reference.
+      * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
+      * @param Object callback - external function to handle response from server.
+    */
+    describe : function(component, config, callback) {
+        // call apex method from controller
+        this.callApex(component, "describe", callback, {
+            "config": JSON.stringify(config || [])
+        });
+    },
+
     // build methods
 
     /**
@@ -10,7 +25,7 @@
     buildSOQL : function(component, config, callback) {
         // call apex method from controller
         this.callApex(component, "buildSOQL", callback, {
-            "config": JSON.stringify(config)
+            "config": JSON.stringify(config || {})
         });
     },
     /**
@@ -22,7 +37,7 @@
     buildSOSL : function(component, config, callback) {
         // call apex method from controller
         this.callApex(component, "buildSOSL", callback, {
-            "config": JSON.stringify(config)
+            "config": JSON.stringify(config || {})
         });
     },
 
@@ -111,7 +126,7 @@
     query : function(component, config, callback) {
         // call apex method from controller
         this.callApex(component, "query", this.callback(component, callback), {
-            "config": JSON.stringify(config)
+            "config": JSON.stringify(config || {})
         });
     },
     /**
@@ -123,7 +138,7 @@
     search : function(component, config, callback) {
         // call apex method from controller
         this.callApex(component, "search", this.callback(component, callback), {
-            "config": JSON.stringify(config)
+            "config": JSON.stringify(config || {})
         });
     }
 })

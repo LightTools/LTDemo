@@ -75,6 +75,21 @@
                     })
                 );
                 break;
+            case "databaseDescribe":
+                component.find("database").describe(
+                    JSON.parse(component.get("v.databaseDescribeConfig")),
+                    $A.getCallback(function(response) {
+                        if (component.isValid()) {
+                            component.set(
+                                "v.databaseDescribeResponse",
+                                helper.parseResponse(response)
+                            );
+                            // hide spinner
+                            toggleSpinner(false);
+                        }
+                    })
+                );
+                break;
         }
     }
 })

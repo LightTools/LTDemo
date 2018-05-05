@@ -1,6 +1,8 @@
 <aura:component implements="force:appHostable">
     
     <!-- component variables -->
+    <aura:attribute name="databaseDescribeConfig" type="String" access="private"/>
+    <aura:attribute name="databaseDescribeResponse" type="String" access="private"/>
     <aura:attribute name="databaseQueryConfig" type="String" access="private"/>
     <aura:attribute name="databaseQueryDebug" type="String" access="private"/>
     <aura:attribute name="databaseQueryResponse" type="String" access="private"/>
@@ -14,7 +16,7 @@
     <!-- /component handle events -->
 
     <!-- component content -->
-    <div>
+    <ui:scrollerWrapper>
         <!-- include components -->
         <c:onePageApp />
         <c:database aura:id="database" />
@@ -23,11 +25,26 @@
         <!-- page layout -->
         
         <!-- header -->
-        <div class="slds-page-header">
-            <div class="slds-text-heading_medium">
-                LT Project Demo
+        <lightning:layout class="slds-page-header
+                                 slds-border_bottom"
+                horizontalAlign="spread"
+                verticalAlign="center">
+            <div>
+                <h1 class="slds-page-header__title">
+                    LT Project Demo
+                </h1>
+                <p class="slds-text-body_small
+                          slds-line-height_reset">
+                    Open Source Lightning Components
+                </p>
             </div>
-        </div>
+            <div>
+                <a href="https://github.com/LToolsProject/LTProject"
+                        target="_blank">
+                    GitHub
+                </a>
+            </div>
+        </lightning:layout>
         <!-- /header -->
         
         <!-- database -->
@@ -35,7 +52,37 @@
             <div class="slds-text-heading_small">
                 Database
             </div>
-            <lightning:tabset >
+            <lightning:tabset>
+
+                <!-- Describe -->
+                <lightning:tab label="Describe">
+                    <lightning:tabset variant="vertical">
+                        <lightning:tab label="Config">
+                            <lightning:layout multipleRows="true">
+                                <lightning:layoutItem size="12">
+                                    <lightning:textarea value="{! v.databaseDescribeConfig }"
+                                            label="Config"
+                                            class="label-hidden" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12"
+                                        class="slds-p-vertical_x-small">
+                                    <lightning:button label="Describe"
+                                            name="databaseDescribe"
+                                            onclick="{! c.action }"
+                                            class="slds-float_right" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:tab>
+                        <lightning:tab label="Response">
+                            <lightning:textarea value="{! v.databaseDescribeResponse }"
+                                    label="Response"
+                                    class="label-hidden" />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </lightning:tab>
+                <!-- /Describe -->
+                
+                <!-- Query -->
                 <lightning:tab label="Query">
                     <lightning:tabset variant="vertical">
                         <lightning:tab label="Config">
@@ -66,6 +113,9 @@
                         </lightning:tab>
                     </lightning:tabset>
                 </lightning:tab>
+                <!-- /Query -->
+
+                <!-- Search -->
                 <lightning:tab label="Search">
                     <lightning:tabset variant="vertical">
                         <lightning:tab label="Config">
@@ -96,11 +146,13 @@
                         </lightning:tab>
                     </lightning:tabset>
                 </lightning:tab>
+                <!-- /Search -->
+
             </lightning:tabset>
         </div>
         <!-- /database -->
 
         <!-- /page layout -->
-    </div>
+    </ui:scrollerWrapper>
     <!-- /component content -->
 </aura:component>

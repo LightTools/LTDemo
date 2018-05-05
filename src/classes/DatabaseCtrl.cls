@@ -47,10 +47,91 @@ public with sharing class DatabaseCtrl {
     }
 
     /** 
+      * @description This class is an abstract wrapper for other DML configs.
+      * @author Sergey Chepurnenko
+    */
+    private abstract class DMLConfig extends Wrapper {
+
+        // class constants
+
+        private final String KEY_CRUD = 'crud';
+        private final String KEY_FLS = 'fls';
+        private final String KEY_SHARING = 'sharing';
+
+        // class private properties
+
+        private Boolean enforceCRUD {
+            private get {
+                if (Utils.isNull(this.enforceCRUD)) {
+                    // get CRUD state from config
+                    this.enforceCRUD = (
+                        this.containsKey(this.KEY_CRUD) ?
+                        this.getBoolean(this.KEY_CRUD) :
+                        true
+                    );
+                }
+                return this.enforceCRUD;
+            }
+            private set;
+        }
+
+        private Boolean enforceFLS {
+            private get {
+                if (Utils.isNull(this.enforceFLS)) {
+                    // get FLS state from config
+                    this.enforceFLS = (
+                        this.containsKey(this.KEY_FLS) ?
+                        this.getBoolean(this.KEY_FLS) :
+                        true
+                    );
+                }
+                return this.enforceFLS;
+            }
+            private set;
+        }
+
+        // class public properties
+
+        public Boolean enforceSharing {
+            private get {
+                if (Utils.isNull(this.enforceSharing)) {
+                    // get Sharing state from config
+                    this.enforceSharing = (
+                        this.containsKey(this.KEY_SHARING) ?
+                        this.getBoolean(this.KEY_SHARING) :
+                        true
+                    );
+                }
+                return this.enforceSharing;
+            }
+            private set;
+        }
+
+        // class constructors
+
+        /**
+          * @description Constructor with param.
+          * @param Object source - instance of Map.
+        */
+        public DMLConfig(Object config) {
+            super(config);
+        }
+
+        /**
+          * @description Constructor with param.
+          * @param String source - serialized javascript object.
+        */
+        public DMLConfig(String config) {
+            super(config);
+        }
+
+    }
+
+    /** 
       * @description This class is a wrapper for query config.
       * @author Sergey Chepurnenko
     */
-    private class QueryConfig extends Wrapper {
+    private class QueryConfig extends DMLConfig {
 
         // class constants
 
@@ -65,9 +146,6 @@ public with sharing class DatabaseCtrl {
         private final String KEY_OFFSET = 'offset';
         private final String KEY_LIMIT = 'limit';
         private final String KEY_OPTIONS = 'options';
-        private final String KEY_CRUD = 'crud';
-        private final String KEY_FLS = 'fls';
-        private final String KEY_SHARING = 'sharing';
         private final String KEY_CHILDS = 'childs';
 
         private final String TEMPLATE_SELECT = 'SELECT {0} FROM {1}';
@@ -91,9 +169,9 @@ public with sharing class DatabaseCtrl {
         // class variables
 
         private String queryObject;
-        private DescribeSObjectResult parentDescribe;
+        private Schema.DescribeSObjectResult parentDescribe;
 
-        // class private properties
+        // class properties
 
         private Boolean isChild {
             private get {
@@ -101,61 +179,14 @@ public with sharing class DatabaseCtrl {
             }
         }
 
-        private Boolean enforceCRUD {
-            private get {
-                if (Utils.isNull(this.enforceCRUD)) {
-                    // get CRUD state from config
-                    this.enforceCRUD = (
-                        this.containsKey(this.KEY_CRUD) ?
-                        Boolean.valueOf(this.get(this.KEY_CRUD)) :
-                        true
-                    );
-                }
-                return this.enforceCRUD;
-            }
-            private set;
-        }
-
-        private Boolean enforceFLS {
-            private get {
-                if (Utils.isNull(this.enforceFLS)) {
-                    // get FLS state from config
-                    this.enforceFLS = (
-                        this.containsKey(this.KEY_FLS) ?
-                        Boolean.valueOf(this.get(this.KEY_FLS)) :
-                        true
-                    );
-                }
-                return this.enforceFLS;
-            }
-            private set;
-        }
-
-        // class public properties
-
-        public Boolean enforceSharing {
-            private get {
-                if (Utils.isNull(this.enforceSharing)) {
-                    // get Sharing state from config
-                    this.enforceSharing = (
-                        this.containsKey(this.KEY_SHARING) ?
-                        Boolean.valueOf(this.get(this.KEY_SHARING)) :
-                        true
-                    );
-                }
-                return this.enforceSharing;
-            }
-            private set;
-        }
-
         // class constructors
 
         /**
           * @description Constructor for child queries.
           * @param Object source - instance of Map.
-          * @param DescribeSObjectResult parentDescribe - describe of parent object.
+          * @param Schema.DescribeSObjectResult parentDescribe - describe of parent object.
         */
-        public QueryConfig(Object config, DescribeSObjectResult parentDescribe) {
+        public QueryConfig(Object config, Schema.DescribeSObjectResult parentDescribe) {
             super(config);
             // store parent object describe
             this.parentDescribe = parentDescribe;
@@ -177,7 +208,7 @@ public with sharing class DatabaseCtrl {
         */
         public String getSOQLQuery() {
             // get object describe for query
-            DescribeSObjectResult queryObjectDescribe = this.getObjectDescribe();
+            Schema.DescribeSObjectResult queryObjectDescribe = this.getObjectDescribe();
             // create result query
             String resultQuery = String.format(
                 this.TEMPLATE_SELECT,
@@ -239,10 +270,10 @@ public with sharing class DatabaseCtrl {
 
         // class private methods
 
-        private DescribeSObjectResult getObjectDescribe() {
-            DescribeSObjectResult result;
+        private Schema.DescribeSObjectResult getObjectDescribe() {
+            Schema.DescribeSObjectResult result;
             // get object name from config
-            String configObject = String.valueOf(this.get(this.KEY_OBJECT));
+            String configObject = this.getString(this.KEY_OBJECT);
             // validation for child queries
             if (this.isChild) {
                 for (ChildRelationship child : this.parentDescribe.getChildRelationships()) {
@@ -280,25 +311,24 @@ public with sharing class DatabaseCtrl {
             return result;
         }
 
-        private String getQueryFields(DescribeSObjectResult objectDescribe) {
+        private String getQueryFields(Schema.DescribeSObjectResult objectDescribe) {
             // create a new list of fields
             List<String> queryFields = new List<String>();
             if (this.containsKey(this.KEY_FIELDS)) {
                 // get functions from config
-                Map<String, Object> configFunctions = (Map<String, Object>)this.get(this.KEY_FUNCTIONS);
+                Wrapper configFunctions = this.getWrapper(this.KEY_FUNCTIONS);
                 // parse config fields
-                for (Object configField : (List<Object>)this.get(this.KEY_FIELDS)) {
+                for (Object configField : this.getList(this.KEY_FIELDS)) {
                     String currentConfigField = String.valueOf(configField).trim();
                     // FLS validation
                     if (!this.enforceFLS || Utils.isAccessible(currentConfigField, objectDescribe)) {
                         // get function for current field
-                        if (Utils.isNotNull(configFunctions) &&
-                                configFunctions.containsKey(currentConfigField)) {
+                        if (configFunctions.containsKey(currentConfigField)) {
                             // wrap field
                             currentConfigField = String.format(
-                                (String)configFunctions.get(currentConfigField),
+                                configFunctions.getString(currentConfigField),
                                 new List<String> {
-                                    currentConfigField
+                                    String.escapeSingleQuotes(currentConfigField)
                                 }
                             );
                         }
@@ -322,12 +352,12 @@ public with sharing class DatabaseCtrl {
             );
         }
 
-        private String getQueryChilds(DescribeSObjectResult objectDescribe) {
+        private String getQueryChilds(Schema.DescribeSObjectResult objectDescribe) {
             String result = Utils.EMPTY_STRING;
             if (this.containsKey(this.KEY_CHILDS)) {
                 // parse childs
                 List<String> queryChilds = new List<String>();
-                for (Object configChild : (List<Object>)this.get(this.KEY_CHILDS)) {
+                for (Object configChild : this.getList(this.KEY_CHILDS)) {
                     // add child query
                     queryChilds.add(new QueryConfig(configChild, objectDescribe).getSOQLQuery());
                 }
@@ -392,14 +422,14 @@ public with sharing class DatabaseCtrl {
             // validate the key
             if (this.containsKey(key)) {
                 // get config part by the key
-                String configPart = String.valueOf(this.get(key));
+                String configPart = this.getString(key);
                 // validate the part
                 if (String.isNotBlank(configPart)) {
                     // create result
                     result = Utils.WHITESPACE + String.format(
                         template,
                         new List<String> {
-                            String.escapeSingleQuotes(configPart)
+                            configPart
                         }
                     );
                 }
@@ -411,7 +441,7 @@ public with sharing class DatabaseCtrl {
             // create a new list of entities
             List<String> searchEntities = new List<String>();
             if (this.containsKey(this.KEY_ENTITIES)) {
-                for (Object configEntity : (List<Object>)this.get(this.KEY_ENTITIES)) {
+                for (Object configEntity : this.getList(this.KEY_ENTITIES)) {
                     if (Utils.isNotNull(configEntity)) {
                         searchEntities.add(this.createSearchEntity(
                             new Wrapper(configEntity)
@@ -424,9 +454,9 @@ public with sharing class DatabaseCtrl {
         }
 
         private String createSearchEntity(Wrapper config) {
-            DescribeSObjectResult objectDescribe;
+            Schema.DescribeSObjectResult objectDescribe;
             // get object name from config
-            String configObject = String.valueOf(config.get(this.KEY_OBJECT));
+            String configObject = config.getString(this.KEY_OBJECT);
             // validate entity object
             if (Utils.getGlobalDescribe().containsKey(configObject)) {
                 objectDescribe = Utils.getDescribe(configObject);
@@ -443,20 +473,19 @@ public with sharing class DatabaseCtrl {
             List<String> entityFields = new List<String>();
             if (config.containsKey(this.KEY_FIELDS)) {
                 // get functions from config
-                Map<String, Object> configFunctions = (Map<String, Object>)config.get(this.KEY_FUNCTIONS);
+                Wrapper configFunctions = config.getWrapper(this.KEY_FUNCTIONS);
                 // parse config fields
-                for (Object configField : (List<Object>)config.get(this.KEY_FIELDS)) {
+                for (Object configField : config.getList(this.KEY_FIELDS)) {
                     String currentConfigField = String.valueOf(configField).trim();
                     // FLS validation
                     if (!this.enforceFLS || Utils.isAccessible(currentConfigField, objectDescribe)) {
                         // get function for current field
-                        if (Utils.isNotNull(configFunctions) &&
-                                configFunctions.containsKey(currentConfigField)) {
+                        if (configFunctions.containsKey(currentConfigField)) {
                             // wrap field
                             currentConfigField = String.format(
-                                (String)configFunctions.get(currentConfigField),
+                                configFunctions.getString(currentConfigField),
                                 new List<String> {
-                                    currentConfigField
+                                    String.escapeSingleQuotes(currentConfigField)
                                 }
                             );
                         }
@@ -479,6 +508,153 @@ public with sharing class DatabaseCtrl {
                 ) : Utils.EMPTY_STRING
             );
         }
+    }
+
+    /** 
+      * @description Describe config parser and wrapper.
+      * @author Sergey Chepurnenko
+    */
+    private class DescribeConfig extends Wrapper {
+
+        // class constants
+
+        private final String KEY_NAME = 'name';       
+        private final String KEY_LOCAL_NAME = 'localName';
+        private final String KEY_LABEL = 'label';
+        private final String KEY_LABEL_PLURAL = 'labelPlural';
+        private final String KEY_CHILD_RELATIONSHIPS = 'childRelationships';
+        private final String KEY_FIELDS = 'fields';
+        private final String KEY_TYPE = 'type';
+        private final String KEY_LENGTH = 'length';
+        private final String KEY_DIGITS = 'digits';
+        private final String KEY_SCALE = 'scale';
+        private final String KEY_CALCULATED_FORMULA = 'calculatedFormula';
+        private final String KEY_CONTROLLER = 'controller';
+        private final String KEY_DEFAULT_VALUE = 'defaultValue';
+        private final String KEY_DEFAULT_VALUE_FORMULA = 'defaultValueFormula';
+        private final String KEY_INLINE_HELP_TEXT = 'inlineHelpText';
+        private final String KEY_RELATIONSHIP_NAME = 'relationshipName';
+        private final String KEY_REFERENCE_TO = 'referenceTo';
+        private final String KEY_PICKLIST_VALUES = 'picklistValues';
+        private final String KEY_IS_AUTONUMBER = 'isAutoNumber';
+        private final String KEY_IS_CALCULATED = 'isCalculated';
+        private final String KEY_IS_CASE_SENSITIVE = 'isCaseSensitive';
+        private final String KEY_IS_FILTERABLE = 'isFilterable';
+        private final String KEY_IS_GROUPABLE = 'isGroupable';
+        private final String KEY_IS_NAME_FIELD = 'isNameField';
+        private final String KEY_IS_NILLABLE = 'isNillable';
+        private final String KEY_IS_SORTABLE = 'isSortable';
+        private final String KEY_IS_UNIQUE = 'isUnique';
+        private final String KEY_IS_SEARCH_PREFILTERABLE = 'isSearchPrefilterable';
+        private final String KEY_IS_DEPENDENT_PICKLIST = 'isDependentPicklist';
+        private final String KEY_IS_RESTRICTED_PICKLIST = 'isRestrictedPicklist';
+        private final String KEY_IS_CUSTOM = 'isCustom';
+        private final String KEY_IS_CUSTOM_SETTING = 'isCustomSetting';
+        private final String KEY_IS_QUERYABLE = 'isQueryable';
+        private final String KEY_IS_ACCESSIBLE = 'isAccessible';
+        private final String KEY_IS_CREATEABLE = 'isCreateable';
+        private final String KEY_IS_UPDATEABLE = 'isUpdateable';
+        private final String KEY_IS_DELETABLE = 'isDeletable';
+
+        // class constructors
+
+        /**
+          * @description Constructor with param.
+          * @param String source - serialized javascript object.
+        */
+        public DescribeConfig(String config) {
+            // if config is defined
+            if (String.isNotBlank(config)) {
+                // create describe for defined objects
+                for (Object configObject : (List<Object>)JSON.deserializeUntyped(config)) {
+                    this.createDescribeConfig(String.valueOf(configObject));
+                }
+            }
+        }
+
+        // class private methods
+
+        private void createDescribeConfig(String objectName) {
+            // if object exists
+            if (Utils.getGlobalDescribe().containsKey(objectName)) {
+                // get describe by object name
+                Schema.DescribeSObjectResult objectDescribe = Utils.getDescribe(objectName);
+                // create describe config for the object
+                this.set(objectName, new Map<String, Object> {
+                    this.KEY_NAME => objectDescribe.getName(),
+                    this.KEY_LOCAL_NAME => objectDescribe.getLocalName(),
+                    this.KEY_LABEL => objectDescribe.getLabel(),  
+                    this.KEY_LABEL_PLURAL => objectDescribe.getLabelPlural(),
+                    this.KEY_CHILD_RELATIONSHIPS => objectDescribe.getChildRelationships(),
+                    this.KEY_FIELDS => this.getFieldsDescribeConfig(objectDescribe),
+                    this.KEY_IS_CUSTOM => objectDescribe.isCustom(),
+                    this.KEY_IS_CUSTOM_SETTING => objectDescribe.isCustomSetting(),
+                    this.KEY_IS_QUERYABLE => objectDescribe.isQueryable(),
+                    this.KEY_IS_ACCESSIBLE => objectDescribe.isAccessible(),
+                    this.KEY_IS_CREATEABLE => objectDescribe.isCreateable(),
+                    this.KEY_IS_UPDATEABLE => objectDescribe.isUpdateable(),
+                    this.KEY_IS_DELETABLE => objectDescribe.isDeletable()
+                });
+            } else {
+                throw new DatabaseException().objectNotFound(objectName);
+            }
+        }
+
+        private Map<String, Object> getFieldsDescribeConfig(Schema.DescribeSObjectResult objectDescribe) {
+            // create empty result
+            Map<String, Object> result = new Map<String, Object>();
+            // create config for each field
+            for (Schema.SObjectField field : objectDescribe.fields.getMap().values()) {
+                // get field describe
+                Schema.DescribeFieldResult fieldDescribe = field.getDescribe();
+                // create field config and add the config to result
+                result.put(fieldDescribe.getName(), new Map<String, Object> {
+                    this.KEY_NAME => fieldDescribe.getName(),
+                    this.KEY_LOCAL_NAME => fieldDescribe.getLocalName(),
+                    this.KEY_LABEL => fieldDescribe.getLabel(),  
+                    this.KEY_TYPE => fieldDescribe.getType(),
+                    this.KEY_LENGTH => fieldDescribe.getLength(),
+                    this.KEY_DIGITS => fieldDescribe.getDigits(),
+                    this.KEY_SCALE => fieldDescribe.getScale(),
+                    this.KEY_CALCULATED_FORMULA => fieldDescribe.getCalculatedFormula(),
+                    this.KEY_CONTROLLER => fieldDescribe.getController(),
+                    this.KEY_DEFAULT_VALUE => fieldDescribe.getDefaultValue(),
+                    this.KEY_DEFAULT_VALUE_FORMULA => fieldDescribe.getDefaultValueFormula(),
+                    this.KEY_INLINE_HELP_TEXT => fieldDescribe.getInlineHelpText(),
+                    this.KEY_RELATIONSHIP_NAME => fieldDescribe.getRelationshipName(),
+                    this.KEY_REFERENCE_TO => this.getFieldReferences(fieldDescribe),
+                    this.KEY_PICKLIST_VALUES => fieldDescribe.getPicklistValues(),
+                    this.KEY_IS_AUTONUMBER => fieldDescribe.isAutoNumber(),
+                    this.KEY_IS_CALCULATED => fieldDescribe.isCalculated(),
+                    this.KEY_IS_CASE_SENSITIVE => fieldDescribe.isCaseSensitive(),
+                    this.KEY_IS_FILTERABLE => fieldDescribe.isFilterable(),
+                    this.KEY_IS_GROUPABLE => fieldDescribe.isGroupable(),
+                    this.KEY_IS_NAME_FIELD => fieldDescribe.isNameField(),
+                    this.KEY_IS_NILLABLE => fieldDescribe.isNillable(),
+                    this.KEY_IS_SORTABLE => fieldDescribe.isSortable(),
+                    this.KEY_IS_UNIQUE => fieldDescribe.isUnique(),
+                    this.KEY_IS_SEARCH_PREFILTERABLE => fieldDescribe.isSearchPrefilterable(),
+                    this.KEY_IS_DEPENDENT_PICKLIST => fieldDescribe.isDependentPicklist(),
+                    this.KEY_IS_RESTRICTED_PICKLIST => fieldDescribe.isRestrictedPicklist(),
+                    this.KEY_IS_CUSTOM => fieldDescribe.isCustom(),
+                    this.KEY_IS_ACCESSIBLE => fieldDescribe.isAccessible(),
+                    this.KEY_IS_CREATEABLE => fieldDescribe.isCreateable(),
+                    this.KEY_IS_UPDATEABLE => fieldDescribe.isUpdateable()
+                });
+            }
+            return result;
+        }
+
+        private List<String> getFieldReferences(Schema.DescribeFieldResult fieldDescribe) {
+            List<String> result = new List<String>();
+            // get all references and convert values to strings
+            // because SObjectType class in not supported in JSON
+            for (Schema.SObjectType objectType : fieldDescribe.getReferenceTo()) {
+                result.add(String.valueOf(objectType));
+            }
+            return result;
+        }
+
     }
 
     /** 
@@ -506,6 +682,23 @@ public with sharing class DatabaseCtrl {
     } 
 
     // class methods
+
+    /**
+      * @description Method to get SObject describe.
+      * @param String config - serialized javascript object. This object should contain object names.
+      * @return String - serialized javascript object with describe results.
+    */
+    @AuraEnabled
+    public static String describe(String config) {
+        String result;
+        try {
+            // create result
+            result = new DescribeConfig(config).toJSON();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());    
+        }
+        return result;
+    }
 
     /**
       * @description Method to build SOQL query string.

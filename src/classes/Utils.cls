@@ -50,7 +50,6 @@ public with sharing class Utils {
         public Map<String, Schema.SObjectType> globalDescribe {
             public get {
                 if (Utils.isNull(this.globalDescribe)) {
-                    Utils.debug(Utils.class.getName(), 'Get Global Describe');
                     this.globalDescribe = Schema.getGlobalDescribe();
                 }
                 return this.globalDescribe;  
@@ -67,7 +66,6 @@ public with sharing class Utils {
             // if sObject exists
             if (!this.objectsDescribe.containsKey(objectName) &&
                     this.globalDescribe.containsKey(objectName)) {
-                Utils.debug(Utils.class.getName(), 'Get Describe for object ' + objectName);
                 // add sObject describe to cache
                 this.objectsDescribe.put(
                     objectName,
@@ -97,7 +95,6 @@ public with sharing class Utils {
                 Map<String, Schema.DescribeFieldResult> objectFieldsCache = this.fieldsDescribe.get(objectName);
                 // if cache is empty (this should happen only for first time)
                 if (Utils.isNull(objectFieldsCache)) {
-                    Utils.debug(Utils.class.getName(), 'Created fields cache for object ' + objectName);
                     // create a new cache
                     objectFieldsCache = new Map<String, Schema.DescribeFieldResult>();
                     // add all fields from object to cache

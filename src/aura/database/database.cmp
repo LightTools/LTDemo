@@ -2,6 +2,13 @@
                 controller="DatabaseCtrl"
                 description="This component contains methods to work with Salesforce database.">
 
+    <!-- describe methods -->
+    <aura:method name="describe" action="{! c.callDescribe }" description="Method to get describe for sObjects."> 
+        <aura:attribute name="config" type="List" required="true" description="This value should contain objects names" />
+        <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
+    </aura:method>
+    <!-- /describe methods -->
+
     <!-- build methods -->
     <aura:method name="buildSOQL" action="{! c.callBuildSOQL }" description="Method to build SOQL query string."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain object name, object fields and query conditions for SOQL." />

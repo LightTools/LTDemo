@@ -1,4 +1,13 @@
 ({
+    // describe methods
+    callDescribe : function(component, event, helper) {
+        helper.describe(
+            component,
+            event.getParam("arguments").config,
+            event.getParam("arguments").callback
+        );
+    },
+
     // build methods
 
     callBuildSOQL : function(component, event, helper) {

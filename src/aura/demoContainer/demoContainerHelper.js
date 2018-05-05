@@ -1,5 +1,12 @@
 ({
 	setDefaults : function(component) {
+        // set default config for database describe
+        component.set(
+            "v.databaseDescribeConfig",
+            JSON.stringify([
+                "Demo__c"
+            ], null, 4)
+        );
         // set default config for database query
         component.set(
             "v.databaseQueryConfig",
@@ -72,7 +79,9 @@
         let result = null;
         if (response.isSuccess) {
             result = JSON.stringify(
-                response.records.slice(),
+                response.hasOwnProperty("records") ?
+                response.records.slice() :
+                JSON.parse(response.data),
                 null, 4
             );
         } else {

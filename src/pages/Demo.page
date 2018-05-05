@@ -1,6 +1,7 @@
-<apex:page sidebar="false" id="demoApp">
+<apex:page sidebar="false">
     <!-- create Demo application -->
     <apex:includeLightning />
+    <div id="demoApp" />
     <script>
     	$Lightning.use('c:demoApp', function() {
 			$Lightning.createComponent(
