@@ -18,6 +18,21 @@
         toggleSpinner(true);
         // select action
         switch (sender.get("v.name")) {
+            case "databaseDescribe":
+                component.find("database").describe(
+                    JSON.parse(component.get("v.databaseDescribeConfig")),
+                    $A.getCallback(function(response) {
+                        if (component.isValid()) {
+                            component.set(
+                                "v.databaseDescribeResponse",
+                                helper.parseResponse(response)
+                            );
+                            // hide spinner
+                            toggleSpinner(false);
+                        }
+                    })
+                );
+                break;
             case "databaseQuery":
                 component.find("database").buildSOQL(
                     JSON.parse(component.get("v.databaseQueryConfig")),
@@ -75,13 +90,13 @@
                     })
                 );
                 break;
-            case "databaseDescribe":
-                component.find("database").describe(
-                    JSON.parse(component.get("v.databaseDescribeConfig")),
+            case "databaseSave":
+                component.find("database").save(
+                    JSON.parse(component.get("v.databaseSaveConfig")),
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
                             component.set(
-                                "v.databaseDescribeResponse",
+                                "v.databaseSaveResponse",
                                 helper.parseResponse(response)
                             );
                             // hide spinner

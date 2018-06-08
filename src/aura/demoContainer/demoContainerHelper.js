@@ -62,6 +62,21 @@
                 "sharing": true
             }, null, 4)
         );
+        // set default config for database save
+        component.set(
+            "v.databaseSaveConfig",
+            JSON.stringify({
+                "items": [
+                    {
+                        "sObjectType": "Demo__c",
+                        "RequiredField__c": "Hello world!"
+                    }
+                ],
+                "crud": true,
+                "fls": true,
+                "sharing": true
+            }, null, 4)
+        );
 	},
     parseDebug : function(response) {
         let result = null;

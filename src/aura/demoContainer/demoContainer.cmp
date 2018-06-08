@@ -1,22 +1,37 @@
 <aura:component implements="force:appHostable">
     
     <!-- component variables -->
+
+    <!-- database describe -->
     <aura:attribute name="databaseDescribeConfig" type="String" access="private"/>
     <aura:attribute name="databaseDescribeResponse" type="String" access="private"/>
+    <!-- /database describe -->
+
+    <!-- database query -->
     <aura:attribute name="databaseQueryConfig" type="String" access="private"/>
     <aura:attribute name="databaseQueryDebug" type="String" access="private"/>
     <aura:attribute name="databaseQueryResponse" type="String" access="private"/>
+    <!-- /database query -->
+
+    <!-- database search -->
     <aura:attribute name="databaseSearchConfig" type="String" access="private"/>
     <aura:attribute name="databaseSearchDebug" type="String" access="private"/>
     <aura:attribute name="databaseSearchResponse" type="String" access="private"/>
-    <!-- component variables -->
+    <!-- /database search -->
+
+    <!-- database describe -->
+    <aura:attribute name="databaseSaveConfig" type="String" access="private"/>
+    <aura:attribute name="databaseSaveResponse" type="String" access="private"/>
+    <!-- /database describe -->
+
+    <!-- /component variables -->
 
     <!-- component handle events -->
     <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
     <!-- /component handle events -->
 
     <!-- component content -->
-    <ui:scrollerWrapper>
+    <ui:scrollerWrapper >
         <!-- include components -->
         <c:onePageApp />
         <c:database aura:id="database" />
@@ -52,7 +67,7 @@
             <div class="slds-text-heading_small">
                 Database
             </div>
-            <lightning:tabset>
+            <lightning:tabset >
 
                 <!-- Describe -->
                 <lightning:tab label="Describe">
@@ -148,11 +163,41 @@
                 </lightning:tab>
                 <!-- /Search -->
 
+                <!-- Save -->
+                <lightning:tab label="Save">
+                    <lightning:tabset variant="vertical">
+                        <lightning:tab label="Config">
+                            <lightning:layout multipleRows="true">
+                                <lightning:layoutItem size="12">
+                                    <lightning:textarea value="{! v.databaseSaveConfig }"
+                                            label="Config"
+                                            class="label-hidden" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12"
+                                        class="slds-p-vertical_x-small">
+                                    <lightning:button label="Save"
+                                            name="databaseSave"
+                                            onclick="{! c.action }"
+                                            class="slds-float_right" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:tab>
+                        <lightning:tab label="Response">
+                            <lightning:textarea value="{! v.databaseSaveResponse }"
+                                    label="Response"
+                                    class="label-hidden" />
+                        </lightning:tab>
+                    </lightning:tabset>
+                </lightning:tab>
+                <!-- /Save -->
+
             </lightning:tabset>
         </div>
         <!-- /database -->
 
         <!-- /page layout -->
+
     </ui:scrollerWrapper>
     <!-- /component content -->
+
 </aura:component>

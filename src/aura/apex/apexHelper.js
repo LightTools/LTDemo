@@ -35,17 +35,23 @@
                 "type": type,
                 "message": message,
                 "code": code
-            }
+            };
         },
         createErrors = function(errors) {
             let result = [],
             createErrorMessage = function(error) {
+                try {
+                    // try to parse custom error
+                    error = JSON.parse(error.message);
+                } catch (e) {
+                    // just a standard error
+                }
                 return createMessage(
                     "ERROR",
                     error.message,
                     error.statusCode
-                )
-            }
+                );
+            };
             errors.forEach(function(error) {
                 // for single message
                 if (error.hasOwnProperty("message")) {

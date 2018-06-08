@@ -151,16 +151,18 @@ public virtual class Wrapper {
       * @param String key - map key.
       * @param Object value - value of any type.
     */
-    public void set(String key, Object value) {
+    public Wrapper set(String key, Object value) {
         this.params.put(key, value);
+        return this;
     }
 
     /**
       * @description Method to add external map to the map.
       * @param Map source - external map.
     */
-    public void setParams(Map<String, Object> source) {
+    public Wrapper setParams(Map<String, Object> source) {
         this.params.putAll(source);
+        return this;
     }
 
     /**

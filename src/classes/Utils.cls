@@ -15,6 +15,35 @@ public with sharing class Utils {
     // inner classes
 
     /** 
+      * @description Enhanced Exception class.
+      * @author Sergey Chepurnenko
+    */
+    public virtual class CustomException extends Exception {
+
+        // class constants
+
+        private final String KEY_CODE = 'statusCode';
+        private final String KEY_MESSAGE = 'message';
+
+        // class methods
+
+        /**
+          * @description Method to set exception's message with code.
+          * @param String code - specific exception's code.
+          * @param String message - exception's message.
+        */
+        public void setMessage(String code, String message) {
+            // call method from super class
+            super.setMessage(
+                // wrap code and message to JSON
+                new Wrapper().set(this.KEY_CODE, code)
+                             .set(this.KEY_MESSAGE, message)
+                             .toJSON()
+            );
+        }
+    }
+
+    /** 
       * @description Describe Cache feature.
       * @author Sergey Chepurnenko
     */
@@ -270,6 +299,42 @@ public with sharing class Utils {
 
     public static Boolean isAccessible(String fieldName, String objectName) {
         return Utils.isAccessible(
+            fieldName,
+            Utils.getDescribe(objectName)
+        );
+    }
+
+    public static Boolean isCreateable(String fieldName, Schema.DescribeSObjectResult objectDescribe) {
+        // get field describe
+        Schema.DescribeFieldResult fieldDescribe = Utils.getDescribe(fieldName, objectDescribe);
+        // create result
+        return (
+            Utils.isNotNull(fieldDescribe) ?
+            fieldDescribe.isCreateable() :
+            false
+        );
+    }
+
+    public static Boolean isCreateable(String fieldName, String objectName) {
+        return Utils.isCreateable(
+            fieldName,
+            Utils.getDescribe(objectName)
+        );
+    }
+
+    public static Boolean isUpdateable(String fieldName, Schema.DescribeSObjectResult objectDescribe) {
+        // get field describe
+        Schema.DescribeFieldResult fieldDescribe = Utils.getDescribe(fieldName, objectDescribe);
+        // create result
+        return (
+            Utils.isNotNull(fieldDescribe) ?
+            fieldDescribe.isUpdateable() :
+            false
+        );
+    }
+
+    public static Boolean isUpdateable(String fieldName, String objectName) {
+        return Utils.isUpdateable(
             fieldName,
             Utils.getDescribe(objectName)
         );
