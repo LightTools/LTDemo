@@ -1,0 +1,204 @@
+<aura:component>
+
+    <!-- component variables -->
+
+    <!-- database describe -->
+    <aura:attribute name="databaseDescribeConfig" type="String" access="private"/>
+    <aura:attribute name="databaseDescribeResponse" type="String" access="private"/>
+    <!-- /database describe -->
+
+    <!-- database query -->
+    <aura:attribute name="databaseQueryConfig" type="String" access="private"/>
+    <aura:attribute name="databaseQueryDebug" type="String" access="private"/>
+    <aura:attribute name="databaseQueryResponse" type="String" access="private"/>
+    <!-- /database query -->
+
+    <!-- database search -->
+    <aura:attribute name="databaseSearchConfig" type="String" access="private"/>
+    <aura:attribute name="databaseSearchDebug" type="String" access="private"/>
+    <aura:attribute name="databaseSearchResponse" type="String" access="private"/>
+    <!-- /database search -->
+
+    <!-- database save -->
+    <aura:attribute name="databaseSaveConfig" type="String" access="private"/>
+    <aura:attribute name="databaseSaveResponse" type="String" access="private"/>
+    <!-- /database save -->
+
+    <!-- database remove -->
+    <aura:attribute name="databaseRemoveConfig" type="String" access="private"/>
+    <aura:attribute name="databaseRemoveResponse" type="String" access="private"/>
+    <!-- /database remove -->
+
+    <!-- /component variables -->
+
+    <!-- component handle events -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
+    <!-- /component handle events -->
+
+    <!-- component content -->
+    <div class="demo-database">
+
+        <!-- include components -->
+        <c:database aura:id="database" />
+        <!-- /include components -->
+
+        <div class="slds-text-heading_small">
+            Database
+        </div>
+        <lightning:tabset >
+
+            <!-- Describe -->
+            <lightning:tab label="Describe">
+                <lightning:tabset variant="vertical">
+                    <lightning:tab label="Config">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="12">
+                                <lightning:textarea value="{! v.databaseDescribeConfig }"
+                                        label="Config"
+                                        class="label-hidden" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12"
+                                    class="slds-p-vertical_x-small">
+                                <lightning:button label="Describe"
+                                        name="databaseDescribe"
+                                        onclick="{! c.action }"
+                                        class="slds-float_right" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Response">
+                        <lightning:textarea value="{! v.databaseDescribeResponse }"
+                                label="Response"
+                                class="label-hidden" />
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:tab>
+            <!-- /Describe -->
+            
+            <!-- Query -->
+            <lightning:tab label="Query">
+                <lightning:tabset variant="vertical">
+                    <lightning:tab label="Config">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="12">
+                                <lightning:textarea value="{! v.databaseQueryConfig }"
+                                        label="Config"
+                                        class="label-hidden" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12"
+                                    class="slds-p-vertical_x-small">
+                                <lightning:button label="Query"
+                                        name="databaseQuery"
+                                        onclick="{! c.action }"
+                                        class="slds-float_right" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Debug">
+                        <lightning:textarea value="{! v.databaseQueryDebug }"
+                                label="Debug"
+                                class="label-hidden" />
+                    </lightning:tab>
+                    <lightning:tab label="Response">
+                        <lightning:textarea value="{! v.databaseQueryResponse }"
+                                label="Response"
+                                class="label-hidden" />
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:tab>
+            <!-- /Query -->
+
+            <!-- Search -->
+            <lightning:tab label="Search">
+                <lightning:tabset variant="vertical">
+                    <lightning:tab label="Config">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="12">
+                                <lightning:textarea value="{! v.databaseSearchConfig }"
+                                        label="Config"
+                                        class="label-hidden" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12"
+                                    class="slds-p-vertical_x-small">
+                                <lightning:button label="Search"
+                                        name="databaseSearch"
+                                        onclick="{! c.action }"
+                                        class="slds-float_right" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Debug">
+                        <lightning:textarea value="{! v.databaseSearchDebug }"
+                                label="Debug"
+                                class="label-hidden" />
+                    </lightning:tab>
+                    <lightning:tab label="Response">
+                        <lightning:textarea value="{! v.databaseSearchResponse }"
+                                label="Response"
+                                class="label-hidden" />
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:tab>
+            <!-- /Search -->
+
+            <!-- Save -->
+            <lightning:tab label="Save">
+                <lightning:tabset variant="vertical">
+                    <lightning:tab label="Config">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="12">
+                                <lightning:textarea value="{! v.databaseSaveConfig }"
+                                        label="Config"
+                                        class="label-hidden" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12"
+                                    class="slds-p-vertical_x-small">
+                                <lightning:button label="Save"
+                                        name="databaseSave"
+                                        onclick="{! c.action }"
+                                        class="slds-float_right" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Response">
+                        <lightning:textarea value="{! v.databaseSaveResponse }"
+                                label="Response"
+                                class="label-hidden" />
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:tab>
+            <!-- /Save -->
+
+            <!-- Remove -->
+            <lightning:tab label="Remove">
+                <lightning:tabset variant="vertical">
+                    <lightning:tab label="Config">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="12">
+                                <lightning:textarea value="{! v.databaseRemoveConfig }"
+                                        label="Config"
+                                        class="label-hidden" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12"
+                                    class="slds-p-vertical_x-small">
+                                <lightning:button label="Remove"
+                                        name="databaseRemove"
+                                        onclick="{! c.action }"
+                                        class="slds-float_right" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Response">
+                        <lightning:textarea value="{! v.databaseRemoveResponse }"
+                                label="Response"
+                                class="label-hidden" />
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:tab>
+            <!-- /Remove -->
+
+        </lightning:tabset>
+    </div>
+    <!-- /component content -->
+
+</aura:component>

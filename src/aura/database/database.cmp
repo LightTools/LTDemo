@@ -30,12 +30,12 @@
         <aura:attribute name="config" type="Object" required="true" description="This object should contain search text, search entities and query conditions for SOSL." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
     </aura:method>
-    <aura:method name="save" action="{! c.callSave }" description="Method to save records in database."> 
-        <aura:attribute name="config" type="Object" required="true" description="This object should contain records to save and DML options." />
+    <aura:method name="save" action="{! c.callSave }" description="Method to insert/update records in database."> 
+        <aura:attribute name="config" type="Object" required="true" description="This object should contain records to insert/update and DML options." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
     </aura:method>
     <aura:method name="remove" action="{! c.callRemove }" description="Method to remove records from database."> 
-        <aura:attribute name="config" type="Object" required="true" description="This object should contain records to remove and DML options." />
+        <aura:attribute name="config" type="Object" required="true" description="This object should contain record Ids to delete and DML options." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />  
     </aura:method>
     <!-- /data methods -->

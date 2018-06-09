@@ -7,7 +7,7 @@ public with sharing class DatabaseCtrl {
     // inner classes
 
     /** 
-      * @description This class is an implementation for custom exceptions inside Database class.
+      * @description Implementation of custom exceptions inside Database class.
       * @author Sergey Chepurnenko
     */
     private class DatabaseException extends Utils.CustomException {
@@ -62,6 +62,14 @@ public with sharing class DatabaseCtrl {
         public DatabaseException objectNotUpdateable(String objectName) {
             this.setMessage(this.CODE_ACCESS_DENIED, String.format(
                 'Object {0} is not updateable.',
+                new List<String>{ objectName }
+            ));
+            return this;
+        }
+
+        public DatabaseException objectNotDeleteable(String objectName) {
+            this.setMessage(this.CODE_ACCESS_DENIED, String.format(
+                'Object {0} is not deleteable.',
                 new List<String>{ objectName }
             ));
             return this;
@@ -225,7 +233,7 @@ public with sharing class DatabaseCtrl {
     }
 
     /** 
-      * @description This class is an abstract wrapper for other DML configs.
+      * @description Wrapper for other DML configs.
       * @author Sergey Chepurnenko
     */
     private abstract class DMLConfig extends Wrapper {
@@ -306,7 +314,7 @@ public with sharing class DatabaseCtrl {
     }
 
     /** 
-      * @description This class is a wrapper for query config.
+      * @description Wrapper for query config.
       * @author Sergey Chepurnenko
     */
     private class QueryConfig extends DMLConfig {
@@ -709,14 +717,14 @@ public with sharing class DatabaseCtrl {
     }
 
     /** 
-      * @description This class is a wrapper for save method config.
+      * @description Wrapper for save method config.
       * @author Sergey Chepurnenko
     */
     private class SaveConfig extends DMLConfig {
 
         // class constants
 
-        private final String KEY_ITEMS = 'items';
+        private final String KEY_RECORDS = 'records';
         private final String KEY_SOBJECT_TYPE = 'sObjectType';
         private final String KEY_FIELD_ID = 'Id';
 
@@ -748,8 +756,8 @@ public with sharing class DatabaseCtrl {
             // create empty result
             List<SObject> result = new List<SObject>();
             // parse items
-            if (this.containsKey(this.KEY_ITEMS)) {
-                List<Object> configItems = this.getList(this.KEY_ITEMS);
+            if (this.containsKey(this.KEY_RECORDS)) {
+                List<Object> configItems = this.getList(this.KEY_RECORDS);
                 // if items are not null
                 if (Utils.isNotNull(configItems)) {
                     // create sobjects
@@ -817,6 +825,72 @@ public with sharing class DatabaseCtrl {
     }
 
     /** 
+      * @description Wrapper for remove method config.
+      * @author Sergey Chepurnenko
+    */
+    private class RemoveConfig extends DMLConfig {
+
+        // class constants
+
+        private final String KEY_KEYS = 'keys';
+
+        // class properties
+
+        public List<Id> recordIds {
+            public get {
+                if (Utils.isNull(this.recordIds)) {
+                    this.recordIds = this.getRecordIds();
+                }
+                return this.recordIds;
+            }
+            private set;
+        }
+
+        // class constructors
+
+        /**
+          * @description Constructor with param.
+          * @param String source - serialized javascript object.
+        */
+        public RemoveConfig(String config) {
+            super(config);
+        }
+
+        // class methods
+
+        private List<Id> getRecordIds() {
+            // create empty result
+            List<Id> result = new List<Id>();
+            // parse items
+            if (this.containsKey(this.KEY_KEYS)) {
+                List<Object> configItems = this.getList(this.KEY_KEYS);
+                // if items are not null
+                if (Utils.isNotNull(configItems)) {
+                    // validate items
+                    for (Object configItem : configItems) {
+                        // item is not null
+                        if (Utils.isNotNull(configItem)) {
+                            // convert item to record id
+                            Id recordId = String.valueOf(configItem);
+                            // get sobject describe
+                            Schema.DescribeSObjectResult objectDescribe = Utils.getDescribe(recordId.getSObjectType());
+                            // validate access rights
+                            if (this.enforceCRUD && !objectDescribe.isDeletable()) {
+                                // if no access, show exception
+                                throw new DatabaseException().objectNotUpdateable(objectDescribe.getName());
+                            }
+                            // add record id to result
+                            result.add(recordId);
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+    }
+
+    /** 
       * @description Class to call Database methods without sharing.
       * @author Sergey Chepurnenko
     */
@@ -852,6 +926,14 @@ public with sharing class DatabaseCtrl {
         */
         public List<Database.SaveResult> callUpdate(List<SObject> records) {
             return Database.update(records);
+        }
+
+        /**
+          * @description Database.delete() method without sharing.
+          * @return List<Database.DeleteResult> - DML result.
+        */
+        public List<Database.DeleteResult> callDelete(List<Id> recordIds) {
+            return Database.delete(recordIds);
         }
 
     } 
@@ -951,18 +1033,23 @@ public with sharing class DatabaseCtrl {
         }
     }
 
+    /**
+      * @description Method to insert/update records.
+      * @param String config - serialized javascript object.
+      * @return String - serialized javascript object with saved records.
+    */
     @AuraEnabled
     public static String save(String config) {
         try {
             // create DML wrapper
             SaveConfig saveConfigWrapper = new SaveConfig(config);
-            // create separate lists to create/update
-            List<SObject> recordsCreate = new List<SObject>();
+            // create separate lists to insert/update
+            List<SObject> recordsInsert = new List<SObject>();
             List<SObject> recordsUpdate = new List<SObject>();
             // parse records
             for (SObject record : saveConfigWrapper.records) {
-                if (Utils.isNull(record.Id)) { // if record to create
-                    recordsCreate.add(record);
+                if (Utils.isNull(record.Id)) { // if record to insert
+                    recordsInsert.add(record);
                 } else { // if record to update
                     recordsUpdate.add(record);
                 }
@@ -970,11 +1057,11 @@ public with sharing class DatabaseCtrl {
             // save records
             if (saveConfigWrapper.enforceSharing) {
                 // with sharing
-                Database.insert(recordsCreate);
+                Database.insert(recordsInsert);
                 Database.update(recordsUpdate);
             } else {
                 // without sharing
-                new DatabaseWithoutSharing().callInsert(recordsCreate);
+                new DatabaseWithoutSharing().callInsert(recordsInsert);
                 new DatabaseWithoutSharing().callUpdate(recordsUpdate);
             }
             // create result
@@ -987,10 +1074,26 @@ public with sharing class DatabaseCtrl {
         }
     }
 
+    /**
+      * @description Method to delete records.
+      * @param String config - serialized javascript object.
+      * @return Boolean - true if remove is successed.
+    */
     @AuraEnabled
-    public static String remove(String config) {
+    public static Boolean remove(String config) {
         try {
-            return null;
+            // create DML wrapper
+            RemoveConfig removeConfigWrapper = new RemoveConfig(config);
+            // remove records
+            if (removeConfigWrapper.enforceSharing) {
+                // with sharing
+                Database.delete(removeConfigWrapper.recordIds);
+            } else {
+                // without sharing
+                new DatabaseWithoutSharing().callDelete(removeConfigWrapper.recordIds);
+            }
+            // just a dummy result
+            return true;
         } catch (DMLException e) {
             // no need to wrap DML exceptions
             throw e;

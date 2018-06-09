@@ -140,5 +140,29 @@
         this.callApex(component, "search", this.callback(component, callback), {
             "config": JSON.stringify(config || {})
         });
+    },
+    /**
+      * @description Method to insert/update records in database.
+      * @param Object component - component reference.
+      * @param Object config - this object should contain records to insert/update and DML options.
+      * @param Object callback - external function to handle response from server.
+    */
+    save : function(component, config, callback) {
+        // call apex method from controller
+        this.callApex(component, "save", this.callback(component, callback), {
+            "config": JSON.stringify(config || {})
+        });
+    },
+    /**
+      * @description Method to delete records from database.
+      * @param Object component - component reference.
+      * @param Object config - This object should contain record Ids to delete and DML options.
+      * @param Object callback - external function to handle response from server.
+    */
+    remove : function(component, config, callback) {
+        // call apex method from controller
+        this.callApex(component, "remove", callback, {
+            "config": JSON.stringify(config || {})
+        });
     }
 })

@@ -5,8 +5,9 @@
       * @param String method - name of Apex method.
       * @param Object callback - external function to handle response from server.
       * @param Object params - Apex method parameters.
+      * @param Object options - reserved for further use.
     */
-    callApex : function(component, method, callback, params) {
+    callApex : function(component, method, callback, params, options) {
         let apexMethod = component.get("c." + method);
         apexMethod.setParams(params);
         apexMethod.setCallback(this, function(response) {
