@@ -35,7 +35,7 @@ public virtual class Wrapper {
       * @param String source - serialized javascript object.
     */
     public Wrapper(String source) {
-        if (Utils.isNotNull(source)) {
+        if (String.isNotBlank(source)) {
             this.params = (Map<String, Object>)JSON.deserializeUntyped(source);
         } else {
             this();
@@ -84,7 +84,7 @@ public virtual class Wrapper {
       * @return String - value from the map.
     */
     public String getString(String key) {
-        String result = String.valueOf(this.params.get(key));
+        String result = String.valueOf(this.get(key));
         return (
             String.isNotBlank(result) ?
             String.escapeSingleQuotes(result) :
@@ -98,7 +98,7 @@ public virtual class Wrapper {
       * @return Boolean - value from the map.
     */
     public Boolean getBoolean(String key) {
-        return Boolean.valueOf(this.params.get(key));
+        return Boolean.valueOf(this.get(key));
     }
 
     /**
@@ -107,7 +107,7 @@ public virtual class Wrapper {
       * @return Integer - value from the map.
     */
     public Integer getInteger(String key) {
-        return Integer.valueOf(this.params.get(key));
+        return Integer.valueOf(this.get(key));
     }
 
     /**
