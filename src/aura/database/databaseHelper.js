@@ -6,12 +6,13 @@
       * @param Object component - component reference.
       * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    describe : function(component, config, callback) {
+    describe : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "describe", callback, {
             "config": JSON.stringify(config || [])
-        });
+        }, options);
     },
 
     // build methods
@@ -21,24 +22,26 @@
       * @param Object component - component reference.
       * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    buildSOQL : function(component, config, callback) {
+    buildSOQL : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "buildSOQL", callback, {
             "config": JSON.stringify(config || {})
-        });
+        }, options);
     },
     /**
       * @description Method to build SOSL query string.
       * @param Object component - component reference.
       * @param Object config - this object should contain search text, search entities and query conditions for SOSL.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    buildSOSL : function(component, config, callback) {
+    buildSOSL : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "buildSOSL", callback, {
             "config": JSON.stringify(config || {})
-        });
+        }, options);
     },
 
     // data methods
@@ -122,47 +125,51 @@
       * @param Object component - component reference.
       * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    query : function(component, config, callback) {
+    query : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "query", this.callback(component, callback), {
             "config": JSON.stringify(config || {})
-        });
+        }, options);
     },
     /**
       * @description Method to get records from server using SOSL query.
       * @param Object component - component reference.
       * @param Object config - this object should contain search text, search entities and query conditions for SOSL.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    search : function(component, config, callback) {
+    search : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "search", this.callback(component, callback), {
             "config": JSON.stringify(config || {})
-        });
+        }, options);
     },
     /**
       * @description Method to insert/update records in database.
       * @param Object component - component reference.
       * @param Object config - this object should contain records to insert/update and DML options.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    save : function(component, config, callback) {
+    save : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "save", this.callback(component, callback), {
             "config": JSON.stringify(config || {})
-        });
+        }, options);
     },
     /**
       * @description Method to delete records from database.
       * @param Object component - component reference.
       * @param Object config - This object should contain record Ids to delete and DML options.
       * @param Object callback - external function to handle response from server.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
-    remove : function(component, config, callback) {
+    remove : function(component, config, callback, options) {
         // call apex method from controller
         this.callApex(component, "remove", callback, {
             "config": JSON.stringify(config || {})
-        });
+        }, options);
     }
 })

@@ -5,7 +5,7 @@
       * @param String method - name of Apex method.
       * @param Object callback - external function to handle response from server.
       * @param Object params - Apex method parameters.
-      * @param Object options - reserved for further use.
+      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
     */
     callApex : function(component, method, callback, params, options) {
         let apexMethod = component.get("c." + method);
@@ -15,6 +15,25 @@
                 this.handleApexResponse(response, callback);
             }
         });
+        // check options
+        if (!$A.util.isEmpty(options)) {
+            // check if background
+            if (options.background === true) {
+                apexMethod.setBackground();
+            }
+            // check if abortable
+            if (options.abortable === true) {
+                apexMethod.setAbortable();
+            }
+            // check if storable
+            if (options.storable === true) {
+                apexMethod.setStorable(
+                    options.hasOwnProperty('ignoreExisting') ?
+                    options.ignoreExisting :
+                    false
+                );
+            }
+        }
         $A.enqueueAction(apexMethod);
     },
     /**
