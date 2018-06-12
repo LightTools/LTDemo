@@ -98,6 +98,7 @@ public with sharing class DatabaseCtrl {
         private final String KEY_LABEL = 'label';
         private final String KEY_LABEL_PLURAL = 'labelPlural';
         private final String KEY_CHILD_RELATIONSHIPS = 'childRelationships';
+        private final String KEY_RECORD_TYPES = 'recordTypes';
         private final String KEY_FIELDS = 'fields';
         private final String KEY_TYPE = 'type';
         private final String KEY_LENGTH = 'length';
@@ -161,6 +162,7 @@ public with sharing class DatabaseCtrl {
                     this.KEY_LABEL => objectDescribe.getLabel(),  
                     this.KEY_LABEL_PLURAL => objectDescribe.getLabelPlural(),
                     this.KEY_CHILD_RELATIONSHIPS => objectDescribe.getChildRelationships(),
+                    this.KEY_RECORD_TYPES => objectDescribe.getRecordTypeInfos(),
                     this.KEY_FIELDS => this.getFieldsDescribeConfig(objectDescribe),
                     this.KEY_IS_CUSTOM => objectDescribe.isCustom(),
                     this.KEY_IS_CUSTOM_SETTING => objectDescribe.isCustomSetting(),
