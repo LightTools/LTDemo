@@ -60,3 +60,4 @@ config/.org_metadata
 .config
 .deploy
 .templates
+.history
