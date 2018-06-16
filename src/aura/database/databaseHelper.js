@@ -1,175 +1,136 @@
 ({
-    // describe methods
-
     /**
-      * @description Method to build SOQL query string.
+      * @description Common method to call database methods by name.
       * @param Object component - component reference.
-      * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
+      * @param String name - Apex method name.
+      * @param Object params - set of parameters (sender, callback, etc.) for method.
     */
-    describe : function(component, config, callback, options) {
+    method : function(component, name, params) {
         // call apex method from controller
-        this.callApex(component, "describe", callback, {
-            "config": JSON.stringify(config || [])
-        }, options);
-    },
-
-    // build methods
-
-    /**
-      * @description Method to build SOQL query string.
-      * @param Object component - component reference.
-      * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
-    */
-    buildSOQL : function(component, config, callback, options) {
-        // call apex method from controller
-        this.callApex(component, "buildSOQL", callback, {
-            "config": JSON.stringify(config || {})
-        }, options);
+        this.callApex(
+            component,
+            // set method name
+            name,
+            // set method callback
+            this.getCallback(component, params, (
+                ["query", "search", "save"].indexOf(name) !== -1 // identify query, search and save methods and use wrapping for them
+            )),
+            // set method params
+            this.wrapParams(params),
+            // set method options
+            params.options
+        );
     },
     /**
-      * @description Method to build SOSL query string.
+      * @description Method to create callback for database methods. 
       * @param Object component - component reference.
-      * @param Object config - this object should contain search text, search entities and query conditions for SOSL.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
+      * @param Object params - set of parameters (sender, callback, etc.) to create callback method.
+      * @param Boolean wrapping - whether to use wrap feature.
     */
-    buildSOSL : function(component, config, callback, options) {
-        // call apex method from controller
-        this.callApex(component, "buildSOSL", callback, {
-            "config": JSON.stringify(config || {})
-        }, options);
-    },
-
-    // data methods
-
-    /**
-      * @description Method to create callback for query and search.
-      * @param Object component - component reference.
-      * @param Object callback - external function to handle response from server.
-    */
-    callback : function(component, callback) {
-        // inner methods
-        let createRecord = function(source) {
-            let result = {};
-            // check each field in the source record
-            for (let field in source) {
-                // get current field value
-                let fieldValue = source[field];
-                // identify field value
-                if (fieldValue.hasOwnProperty("type")) { // for attributes of main record
-                    // set object type
-                    result["sObjectType"] = fieldValue.type;
-                } else if (fieldValue.hasOwnProperty("records")) { // for child relationships
-                    // create empty array of childs
-                    let childs = [];
-                    // parse childs
-                    fieldValue.records.forEach(function(child) {
-                        childs.push(createRecord(child));
-                    });
-                    // set childs
-                    result[field] = childs;
-                } else if (fieldValue.hasOwnProperty("attributes")) { // for reference fields
-                    result[field] = createRecord(fieldValue);
-                } else { // for simple fields
-                    result[field] = fieldValue;
-                }
-            }
-            return result;
-        };
+    getCallback : function(component, params, wrapping) {
         // return callback
         return $A.getCallback(function(response) {
             if (component.isValid()) {
-                // create empty result
-                let records = [];
-                // parse response data
                 try {
-                    // if data exists in the response
-                    if (response.hasOwnProperty("data") &&
-                            !$A.util.isEmpty(response.data)) {
-                        // parse data items
-                        JSON.parse(response.data).forEach(function(dataItem) {
-                            // for search result
-                            if (dataItem.hasOwnProperty("length")) {
-                                let dataItemChilds = [];
-                                dataItem.forEach(function(dataItemChild) {
-                                    dataItemChilds.push(createRecord(dataItemChild));
-                                });
-                                records.push(dataItemChilds);
-                            } else { // for query result
-                                records.push(createRecord(dataItem));
-                            }
-                        });
+                    // if sender and callback are not empty
+                    if (!$A.util.isEmpty(params.sender) && !$A.util.isEmpty(params.callback)) {
+                        // call method using sender instance
+                        params.callback.call(params.sender, (
+                            // if need to user wrapping
+                            wrapping === true ?
+                            // wrap response
+                            this.wrapResponse(response) :
+                            // return original response
+                            response
+                        ));
                     }
                 } catch(e) {
                     console.error(e);
-                } finally {
-                    // if callback exists
-                    if (!$A.util.isEmpty(callback)) {
-                        // add records to the response and return
-                        callback(Object.assign(
-                            response, {
-                                "records": records
-                            }
-                        ));
-                    }
                 }
             }
         });
     },
     /**
-      * @description Method to get records from server using SOQL query.
-      * @param Object component - component reference.
-      * @param Object config - this object should contain object name, object fields and query conditions for SOQL.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
+      * @description Method to create parameters for Apex method.
+      * @param Object params - set of parameters (sender, callback) to create callback method.
     */
-    query : function(component, config, callback, options) {
-        // call apex method from controller
-        this.callApex(component, "query", this.callback(component, callback), {
-            "config": JSON.stringify(config || {})
-        }, options);
+    wrapParams : function(params) {
+        return {
+            "config": (
+                // if config is not empty and not null
+                !$A.util.isEmpty(params.config) ?
+                // convert config to JSON
+                JSON.stringify(params.config) :
+                // or just return null as config
+                null
+            )
+        };
     },
     /**
-      * @description Method to get records from server using SOSL query.
-      * @param Object component - component reference.
-      * @param Object config - this object should contain search text, search entities and query conditions for SOSL.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
+      * @description Method to wrap records inside database response.
+      * @param Object response - data from Apex.
     */
-    search : function(component, config, callback, options) {
-        // call apex method from controller
-        this.callApex(component, "search", this.callback(component, callback), {
-            "config": JSON.stringify(config || {})
-        }, options);
+    wrapResponse : function(response) {
+        // create empty result
+        let records = [];
+        // parse response data
+        try {
+            // if data exists in the response
+            if (response.hasOwnProperty("data") &&
+                    !$A.util.isEmpty(response.data)) {
+                // parse data items
+                for (let dataItem of JSON.parse(response.data)) {
+                    // for search result
+                    if (dataItem.hasOwnProperty("length")) {
+                        let dataItemChilds = [];
+                        for (let dataItemChild of dataItem) {
+                            dataItemChilds.push(this.wrapRecord(dataItemChild));
+                        };
+                        records.push(dataItemChilds);
+                    } else { // for query result
+                        records.push(this.wrapRecord(dataItem));
+                    }
+                };
+            }
+        } catch(e) {
+            console.error(e);
+        } finally {
+            // add records to response and return
+            return Object.assign(response, {
+                "records": records
+            });
+        }
     },
     /**
-      * @description Method to insert/update records in database.
-      * @param Object component - component reference.
-      * @param Object config - this object should contain records to insert/update and DML options.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
+      * @description Method to wrap a record.
+      * @param Object source - original record.
     */
-    save : function(component, config, callback, options) {
-        // call apex method from controller
-        this.callApex(component, "save", this.callback(component, callback), {
-            "config": JSON.stringify(config || {})
-        }, options);
-    },
-    /**
-      * @description Method to delete records from database.
-      * @param Object component - component reference.
-      * @param Object config - This object should contain record Ids to delete and DML options.
-      * @param Object callback - external function to handle response from server.
-      * @param Object options - optional params (background, abortable, storable, ignoreExisting - valid only if storable === true).
-    */
-    remove : function(component, config, callback, options) {
-        // call apex method from controller
-        this.callApex(component, "remove", callback, {
-            "config": JSON.stringify(config || {})
-        }, options);
+    wrapRecord : function(source) {
+        // create empty result
+        let result = {};
+        // check each field in the source record
+        for (let field in source) {
+            // get current field value
+            let fieldValue = source[field];
+            // identify field value
+            if (fieldValue.hasOwnProperty("type")) { // for attributes of main record
+                // set object type
+                result["sObjectType"] = fieldValue.type;
+            } else if (fieldValue.hasOwnProperty("records")) { // for child relationships
+                // create empty array of childs
+                let childs = [];
+                // parse childs
+                for (let child of fieldValue.records) {
+                    childs.push(this.wrapRecord(child));
+                };
+                // set childs
+                result[field] = childs;
+            } else if (fieldValue.hasOwnProperty("attributes")) { // for reference fields
+                result[field] = this.wrapRecord(fieldValue);
+            } else { // for simple fields
+                result[field] = fieldValue;
+            }
+        }
+        return result;
     }
 })

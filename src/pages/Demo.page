@@ -3,11 +3,11 @@
     <apex:includeLightning />
     <div id="demoApp" />
     <script>
-    	$Lightning.use('c:demoApp', function() {
+    	$Lightning.use("c:demoApp", function() {
 			$Lightning.createComponent(
-				'c:demoContainer',
+				"c:demoContainer",
                 null,
-                'demoApp'
+                "demoApp"
             );
         });
     </script>

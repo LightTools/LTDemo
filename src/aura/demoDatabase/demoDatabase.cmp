@@ -31,9 +31,9 @@
 
     <!-- /component variables -->
 
-    <!-- component handle events -->
+    <!-- component handlers  -->
     <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
-    <!-- /component handle events -->
+    <!-- /component handlers -->
 
     <!-- component content -->
     <div class="demo-database">

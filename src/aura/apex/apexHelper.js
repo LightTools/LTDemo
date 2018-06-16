@@ -10,11 +10,11 @@
     callApex : function(component, method, callback, params, options) {
         let apexMethod = component.get("c." + method);
         apexMethod.setParams(params);
-        apexMethod.setCallback(this, function(response) {
+        apexMethod.setCallback(this, $A.getCallback(function(response) {
             if (component.isValid()) {
                 this.handleApexResponse(response, callback);
             }
-        });
+        }));
         // check options
         if (!$A.util.isEmpty(options)) {
             // check if background
@@ -28,7 +28,7 @@
             // check if storable
             if (options.storable === true) {
                 apexMethod.setStorable(
-                    options.hasOwnProperty('ignoreExisting') ?
+                    options.hasOwnProperty("ignoreExisting") ?
                     options.ignoreExisting :
                     false
                 );
@@ -72,30 +72,30 @@
                     error.statusCode
                 );
             };
-            errors.forEach(function(error) {
+            for (let error of errors) {
                 // for single message
                 if (error.hasOwnProperty("message")) {
                     result.push(createErrorMessage(error));
                 }
                 // for pageErrors
                 if (error.hasOwnProperty("pageErrors")) {
-                    error.pageErrors.forEach(function(pageError) {
+                    for (let pageError of error.pageErrors) {
                         result.push(createErrorMessage(pageError));
-                    });
+                    };
                 }
                 // for fieldErrors
                 if (error.hasOwnProperty("fieldErrors")) {
                     for (let field in error.fieldErrors) {
-                        error.fieldErrors[field].forEach(function(fieldError) {
+                        for (let fieldError of error.fieldErrors[field]) {
                             result.push(Object.assign(
                                 createErrorMessage(fieldError), {
                                     "field": field
                                 }
                             ));
-                        });
+                        };
                     }
                 }
-            });
+            };
             return result;
         };
         // check state
@@ -124,9 +124,9 @@
                 ];
                 break;
         }
-        // return result
+        // return result if callback exists
         if (!$A.util.isEmpty(callback)) {
-            callback(result);
+            callback.call(this, result);
         }
     }
 })
