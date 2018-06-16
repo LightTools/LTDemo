@@ -12,7 +12,11 @@
         apexMethod.setParams(params);
         apexMethod.setCallback(this, $A.getCallback(function(response) {
             if (component.isValid()) {
-                this.handleApexResponse(response, callback);
+                try {
+                    this.handleApexResponse(response, callback);
+                } catch(e) {
+                    console.error(e);
+                }
             }
         }));
         // check options

@@ -5,7 +5,7 @@
       * @param String name - Apex method name.
       * @param Object params - set of parameters (sender, callback, etc.) for method.
     */
-    method : function(component, name, params) {
+    launch : function(component, name, params) {
         // call apex method from controller
         this.callApex(
             component,

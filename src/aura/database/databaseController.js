@@ -1,9 +1,11 @@
 ({
     callMethod : function(component, event, helper) {
-        // call database methods by name
-        helper.method(
+        // launch database methods by name
+        helper.launch(
             component,
+            // method name
             event.getParam("name"),
+            // method params
             event.getParam("arguments")
         );
     }
