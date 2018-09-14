@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Common component event to use across the application.">
+    <aura:attribute name="data" type="Object" description="Event parameters." />
+</aura:event>
