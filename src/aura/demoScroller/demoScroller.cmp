@@ -1,0 +1,71 @@
+<aura:component>
+
+    <!-- component variables -->
+    <aura:attribute name="dummyText" type="List" access="private"/>
+    <aura:attribute name="position" type="Object" access="private"/>
+    <aura:attribute name="size" type="Object" access="private"/>
+    <!-- /component variables -->
+
+    <!-- component handlers  -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
+    <!-- /component handlers -->
+
+    <!-- component content -->
+    <div class="demo-scroller">
+        <div class="slds-text-heading_small
+                    slds-border_bottom
+                    slds-p-bottom_small
+                    slds-m-bottom_small">
+            Scroller
+        </div>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12">
+                <c:scroller aura:id="scroller"
+                        class="slds-box"
+                        onscroll="{! c.handleScroll }">
+                    <aura:iteration items="{! v.dummyText }" var="textLine">
+                        <p>{! textLine }</p>
+                        <br/>
+                    </aura:iteration>
+                </c:scroller>
+                <lightning:layout horizontalAlign="center"
+                        class="slds-p-around_x-small">
+                    <lightning:badge label="{! 'Horizontal:' + v.position.horizontal }"/>
+                    <lightning:badge label="{! 'Vertical:' + v.position.vertical }"/>
+                </lightning:layout>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12">
+                <lightning:layout horizontalAlign="center">
+                    <lightning:layoutItem>
+                        <lightning:button
+                                value="verticalStart"
+                                label="Vertical Start"
+                                variant="neutral"
+                                onclick="{! c.setPosition }"
+                                disabled="{! equals(v.position.vertical, 0) }" />
+                        <lightning:button
+                                value="verticalEnd"
+                                label="Vertical End"
+                                variant="neutral"
+                                onclick="{! c.setPosition }"
+                                disabled="{! greaterthanorequal(v.position.verticalOffset, v.size.vertical) }" />
+                        <lightning:button
+                                value="horizontalStart"
+                                label="Horizontal Start"
+                                variant="neutral"
+                                onclick="{! c.setPosition }"
+                                disabled="{! equals(v.position.horizontal, 0) }" />
+                        <lightning:button
+                                value="horizontalEnd"
+                                label="Horizontal End"
+                                variant="neutral"
+                                onclick="{! c.setPosition }"
+                                disabled="{! greaterthanorequal(v.position.horizontalOffset, v.size.horizontal) }" />
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    <!-- /component content -->
+
+</aura:component>

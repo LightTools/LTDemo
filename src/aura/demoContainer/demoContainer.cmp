@@ -1,22 +1,19 @@
 <aura:component implements="force:appHostable">
 
     <!-- component content -->
-    <ui:scrollerWrapper class="demo-container">
-
-        <!-- include components -->
-        <c:onePageApp />
-        <!-- /include components -->
+    <div class="demo-container">
 
         <!-- page layout -->
         
         <!-- header -->
-        <lightning:layout class="slds-page-header
+        <lightning:layout class="slds-box
+                                 slds-page-header
                                  slds-border_bottom"
                 horizontalAlign="spread"
                 verticalAlign="center">
             <div>
                 <h1 class="slds-page-header__title">
-                    LT Project Demo
+                    Light Tools
                 </h1>
                 <p class="slds-text-body_small
                           slds-line-height_reset">
@@ -31,17 +28,22 @@
             </div>
         </lightning:layout>
         <!-- /header -->
-        
+     
         <!-- database -->
-        <div class="slds-box
-                    slds-m-around_small">
+        <div class="slds-box">
             <c:demoDatabase />
         </div>
         <!-- /database -->
 
+        <!-- scroller -->
+        <div class="slds-box">
+            <c:demoScroller />
+        </div>
+        <!-- /scroller -->
+
         <!-- /page layout -->
 
-    </ui:scrollerWrapper>
+    </div>
     <!-- /component content -->
 
 </aura:component>

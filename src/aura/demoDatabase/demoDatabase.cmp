@@ -42,7 +42,10 @@
         <c:database aura:id="database" />
         <!-- /include components -->
 
-        <div class="slds-text-heading_small">
+        <div class="slds-text-heading_small
+                    slds-border_bottom
+                    slds-p-bottom_small
+                    slds-m-bottom_small">
             Database
         </div>
         <lightning:tabset >

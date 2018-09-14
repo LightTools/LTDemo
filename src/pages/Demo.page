@@ -11,4 +11,11 @@
             );
         });
     </script>
+    <style>
+        #demoApp {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+        }
+    </style>
 </apex:page>

@@ -1,0 +1,5 @@
+.THIS.demo-scroller
+.lt-scroller {
+    max-height: 12rem;
+    white-space: nowrap;
+}
