@@ -6,7 +6,6 @@
     <!-- describe methods -->
     <aura:method name="describe" action="{! c.callMethod }" description="Method to get describe for sObjects.">
         <aura:attribute name="config" type="List" required="true" description="This value should contain objects names." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>
@@ -15,13 +14,11 @@
     <!-- build methods -->
     <aura:method name="buildSOQL" action="{! c.callMethod }" description="Method to build SOQL query string."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain object name, object fields and query conditions for SOQL." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>
     <aura:method name="buildSOSL" action="{! c.callMethod }" description="Method to build SOSL query string."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain search text, search entities and query conditions for SOSL." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>
@@ -30,25 +27,21 @@
     <!-- data methods -->
     <aura:method name="query" action="{! c.callMethod }" description="Method to get records from server using SOQL query."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain object name, object fields and query conditions for SOQL." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>
     <aura:method name="search" action="{! c.callMethod }" description="Method to get records from server using SOSL query."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain search text, search entities and query conditions for SOSL." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>
     <aura:method name="save" action="{! c.callMethod }" description="Method to insert/update records in database."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain records to insert/update and DML options." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>
     <aura:method name="remove" action="{! c.callMethod }" description="Method to remove records from database."> 
         <aura:attribute name="config" type="Object" required="true" description="This object should contain record Ids to delete and DML options." />
-        <aura:attribute name="sender" type="Object" description="Code instance that called this method." />
         <aura:attribute name="callback" type="Object" description="External function to handle response from server." />
         <aura:attribute name="options" type="Object" description="Optional params (background, abortable, storable, ignoreExisting - valid only if storable === true)." />  
     </aura:method>

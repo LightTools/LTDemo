@@ -11,7 +11,6 @@
             case "databaseDescribe":
                 component.find("database").describe(
                     JSON.parse(component.get("v.databaseDescribeConfig")),
-                    helper,
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
                             // set describe result
@@ -22,13 +21,12 @@
                             // hide spinner
                             this.toggleSpinner(sender, false);
                         }
-                    })
+                    }.bind(helper))
                 );
                 break;
             case "databaseQuery":
                 component.find("database").buildSOQL(
                     JSON.parse(component.get("v.databaseQueryConfig")),
-                    helper,
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
                             // set debug result
@@ -39,7 +37,6 @@
                             // get records
                             component.find("database").query(
                                 JSON.parse(component.get("v.databaseQueryConfig")),
-                                this,
                                 $A.getCallback(function(response) {
                                     if (component.isValid()) {
                                         // set query result
@@ -50,16 +47,15 @@
                                         // hide spinner
                                         this.toggleSpinner(sender, false);
                                     }
-                                })
+                                }.bind(this))
                             );
                         }
-                    })
+                    }.bind(helper))
                 );
                 break;
             case "databaseSearch":
                 component.find("database").buildSOSL(
                     JSON.parse(component.get("v.databaseSearchConfig")),
-                    helper,
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
                             // set debug result
@@ -70,7 +66,6 @@
                             // get records
                             component.find("database").search(
                                 JSON.parse(component.get("v.databaseSearchConfig")),
-                                this,
                                 $A.getCallback(function(response) {
                                     if (component.isValid()) {
                                         component.set(
@@ -80,16 +75,15 @@
                                         // hide spinner
                                         this.toggleSpinner(sender, false);
                                     }
-                                })
+                                }.bind(this))
                             );
                         }
-                    })
+                    }.bind(helper))
                 );
                 break;
             case "databaseSave":
                 component.find("database").save(
                     JSON.parse(component.get("v.databaseSaveConfig")),
-                    helper,
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
                             // set save result
@@ -100,13 +94,12 @@
                             // hide spinner
                             this.toggleSpinner(sender, false);
                         }
-                    })
+                    }.bind(helper))
                 );
                 break;
             case "databaseRemove":
                 component.find("database").remove(
                     JSON.parse(component.get("v.databaseRemoveConfig")),
-                    helper,
                     $A.getCallback(function(response) {
                         if (component.isValid()) {
                             // set remove result
@@ -117,7 +110,7 @@
                             // hide spinner
                             this.toggleSpinner(sender, false);
                         }
-                    })
+                    }.bind(helper))
                 );
                 break;
         }

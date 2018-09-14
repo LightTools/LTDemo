@@ -3,7 +3,7 @@
       * @description Common method to call database methods by name.
       * @param Object component - component reference.
       * @param String name - Apex method name.
-      * @param Object params - set of parameters (sender, callback, etc.) for method.
+      * @param Object params - set of parameters for method.
     */
     launch : function(component, name, params) {
         // call apex method from controller
@@ -24,7 +24,7 @@
     /**
       * @description Method to create callback for database methods. 
       * @param Object component - component reference.
-      * @param Object params - set of parameters (sender, callback, etc.) to create callback method.
+      * @param Object params - set of parameters to create callback method.
       * @param Boolean wrapping - whether to use wrap feature.
     */
     getCallback : function(component, params, wrapping) {
@@ -32,27 +32,27 @@
         return $A.getCallback(function(response) {
             if (component.isValid()) {
                 try {
-                    // if sender and callback are not empty
-                    if (!$A.util.isEmpty(params.sender) && !$A.util.isEmpty(params.callback)) {
-                        // call method using sender instance
-                        params.callback.call(params.sender, (
+                    // if callback is not empty
+                    if (!$A.util.isEmpty(params.callback)) {
+                        // return result with callback
+                        params.callback(
                             // if need to user wrapping
                             wrapping === true ?
                             // wrap response
                             this.wrapResponse(response) :
                             // return original response
                             response
-                        ));
+                        );
                     }
                 } catch(e) {
                     console.error(e);
                 }
             }
-        });
+        }.bind(this));
     },
     /**
       * @description Method to create parameters for Apex method.
-      * @param Object params - set of parameters (sender, callback) to create callback method.
+      * @param Object params - set of parameters to create callback method.
     */
     wrapParams : function(params) {
         return {

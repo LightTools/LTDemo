@@ -130,7 +130,7 @@
         }
         // return result if callback exists
         if (!$A.util.isEmpty(callback)) {
-            callback.call(this, result);
+            callback(result);
         }
     }
 })
