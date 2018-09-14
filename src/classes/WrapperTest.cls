@@ -26,7 +26,7 @@ private class WrapperTest {
 
     // test methods
 
-    @isTest static void testConstructors() {
+    @isTest static void constructorsTest() {
         // create data for test
         Map<String, Object> sourceForTest = new Map<String, Object> {
             TEST_KEY_STRING => TEST_VALUE_STRING
@@ -58,7 +58,7 @@ private class WrapperTest {
         System.assertEquals(TEST_VALUE_STRING, wrapperFromJSON.get(TEST_KEY_STRING));
     }
 
-    @isTest static void testMethods() {
+    @isTest static void methodsTest() {
         // create data for test
         Map<String, Object> paramsForTest = new Map<String, Object> {
             TEST_KEY_STRING => TEST_VALUE_STRING,
