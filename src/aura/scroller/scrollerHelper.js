@@ -28,22 +28,6 @@
         }
     },
     /**
-      * @description Method to remove event listeners on destroy.
-      * @param Object component - component reference.
-    */
-    removeEventListeners : function(component) {
-        try {
-            // get scroll element
-            let element = component.getElement();
-            // remove touch move event listener
-            element.removeEventListener("touchmove");
-            // remove scroll event listener
-            element.removeEventListener("scroll");
-        } catch(e) {
-            console.error(e);
-        }
-    },
-    /**
       * @description Method to define current position of scroll bar.
       * @param Object component - component reference.
       * @param Object position - object with two fields to define horizontal and vertical position (acceptable values: integer, "start", "end").

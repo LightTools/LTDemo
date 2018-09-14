@@ -21,7 +21,6 @@
 
     <!-- component handlers  -->
     <aura:handler name="render" value="{! this }" action="{! c.initialize }"/>
-    <aura:handler name="destroy" value="{! this }" action="{! c.destroy }"/>
     <!-- /component handlers -->
 
     <!-- component content -->
