@@ -84,12 +84,7 @@ public virtual class Wrapper {
       * @return String - value from the map.
     */
     public String getString(String key) {
-        String result = String.valueOf(this.get(key));
-        return (
-            String.isNotBlank(result) ?
-            String.escapeSingleQuotes(result) :
-            result
-        );
+        return String.valueOf(this.get(key));
     }
 
     /**
