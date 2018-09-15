@@ -536,7 +536,7 @@ public with sharing class DatabaseCtrl {
                             currentConfigField = String.format(
                                 configFunctions.getString(currentConfigField),
                                 new List<String> {
-                                    String.escapeSingleQuotes(currentConfigField)
+                                    currentConfigField
                                 }
                             );
                         }
@@ -693,7 +693,7 @@ public with sharing class DatabaseCtrl {
                             currentConfigField = String.format(
                                 configFunctions.getString(currentConfigField),
                                 new List<String> {
-                                    String.escapeSingleQuotes(currentConfigField)
+                                    currentConfigField
                                 }
                             );
                         }
