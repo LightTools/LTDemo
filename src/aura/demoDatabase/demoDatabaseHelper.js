@@ -81,7 +81,7 @@
         component.set(
             "v.databaseRemoveConfig",
             JSON.stringify({
-                "keys": [
+                "items": [
                     "<recordId>",
                     "<recordId>"
                 ],

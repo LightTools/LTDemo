@@ -834,7 +834,7 @@ public with sharing class DatabaseCtrl {
 
         // class constants
 
-        private final String KEY_KEYS = 'keys';
+        private final String KEY_ITEMS = 'items';
 
         // class properties
 
@@ -864,8 +864,8 @@ public with sharing class DatabaseCtrl {
             // create empty result
             List<Id> result = new List<Id>();
             // parse items
-            if (this.containsKey(this.KEY_KEYS)) {
-                List<Object> configItems = this.getList(this.KEY_KEYS);
+            if (this.containsKey(this.KEY_ITEMS)) {
+                List<Object> configItems = this.getList(this.KEY_ITEMS);
                 // if items are not null
                 if (Utils.isNotNull(configItems)) {
                     // validate items
