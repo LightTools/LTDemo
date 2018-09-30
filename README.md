@@ -1,6 +1,6 @@
-# LTProject
+# LTDemo
 
-Open Source Lightning Components.
+Light Tools Demo Application.
 
 ## License
 
