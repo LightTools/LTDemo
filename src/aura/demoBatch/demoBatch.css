@@ -1,0 +1,10 @@
+.THIS.demo-batch
+.textarea-debug
+.slds-textarea {
+    height: 15rem;
+}
+.THIS.demo-batch
+.select-chunk {
+    display: flex;
+    align-items: center;
+}

@@ -35,6 +35,12 @@
         </div>
         <!-- /database -->
 
+        <!-- batch -->
+        <div class="slds-box">
+            <c:demoBatch />
+        </div>
+        <!-- /batch -->
+
         <!-- scroller -->
         <div class="slds-box">
             <c:demoScroller />
