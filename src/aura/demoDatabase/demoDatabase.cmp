@@ -72,7 +72,8 @@
                     <lightning:tab label="Response">
                         <lightning:textarea value="{! v.databaseDescribeResponse }"
                                 label="Response"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                 </lightning:tabset>
             </lightning:tab>
@@ -100,12 +101,14 @@
                     <lightning:tab label="Debug">
                         <lightning:textarea value="{! v.databaseQueryDebug }"
                                 label="Debug"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                     <lightning:tab label="Response">
                         <lightning:textarea value="{! v.databaseQueryResponse }"
                                 label="Response"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                 </lightning:tabset>
             </lightning:tab>
@@ -133,12 +136,14 @@
                     <lightning:tab label="Debug">
                         <lightning:textarea value="{! v.databaseSearchDebug }"
                                 label="Debug"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                     <lightning:tab label="Response">
                         <lightning:textarea value="{! v.databaseSearchResponse }"
                                 label="Response"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                 </lightning:tabset>
             </lightning:tab>
@@ -166,7 +171,8 @@
                     <lightning:tab label="Response">
                         <lightning:textarea value="{! v.databaseSaveResponse }"
                                 label="Response"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                 </lightning:tabset>
             </lightning:tab>
@@ -194,7 +200,8 @@
                     <lightning:tab label="Response">
                         <lightning:textarea value="{! v.databaseRemoveResponse }"
                                 label="Response"
-                                class="label-hidden" />
+                                class="label-hidden"
+                                readonly="true" />
                     </lightning:tab>
                 </lightning:tabset>
             </lightning:tab>
