@@ -63,7 +63,7 @@
             }.bind(this)),
             "finish": $A.getCallback(function(scope, data) {
                 this.debug(component, "> " + batch.getStatus());
-                this.debug(component, "result: " + JSON.stringify(data));
+                this.debug(component, "result: " + JSON.stringify(data.slice()));
                 component.set("v.runned", false);
             }.bind(this)),
             "fail": $A.getCallback(function(method, error) {
