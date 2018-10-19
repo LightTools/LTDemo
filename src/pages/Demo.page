@@ -1,21 +1,36 @@
-<apex:page sidebar="false">
-    <!-- create Demo application -->
+<apex:page title="Light Tools Demo"
+           sidebar="false"
+           showHeader="{! NOT(ISPICKVAL($User.UserType, 'Guest')) }">
+    <style>
+        div.bodyDiv {
+            overflow: hidden;
+        }
+        div.bodyDiv
+        table.outerNoSidebar {
+            padding: 0;
+        }
+        td.noSidebarCell {
+            padding: 0;
+        }
+        #demoApp {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            background: rgb(252, 252, 252);
+        }
+        #demoApp>* {
+            padding: 0.75rem;
+        }
+    </style>
     <apex:includeLightning />
     <div id="demoApp" />
     <script>
-    	$Lightning.use("c:demoApp", function() {
-			$Lightning.createComponent(
-				"c:demoContainer",
+        $Lightning.use("c:demoApp", function() {
+            $Lightning.createComponent(
+                "c:demoContainer",
                 null,
                 "demoApp"
             );
         });
     </script>
-    <style>
-        #demoApp {
-            display: table;
-            table-layout: fixed;
-            width: 100%;
-        }
-    </style>
 </apex:page>

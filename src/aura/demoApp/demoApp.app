@@ -1,4 +1,5 @@
-<aura:application extends="ltng:outApp">
+<aura:application extends="ltng:outApp"
+                  implements="ltng:allowGuestAccess">
 
     <aura:dependency resource="c:demoContainer" />
 
