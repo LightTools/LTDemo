@@ -1,3 +1,11 @@
+.THIS.demo-container {
+    transform: scale(0);
+    transform-origin: 50% 0;
+    transition: transform 0.5s ease;
+}
+.THIS.demo-container:not(.slds-hidden) {
+    transform: scale(1);
+}
 .THIS.demo-container
 .label-hidden
 .slds-form-element__label {
@@ -6,4 +14,7 @@
 .THIS.demo-container>.slds-box:not(.slds-page-header) {
     margin-top: 0.75rem;
     background: rgb(255, 255, 255);
+}
+.THIS.demo-container>.slds-box {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }

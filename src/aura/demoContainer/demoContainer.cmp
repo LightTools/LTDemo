@@ -1,7 +1,9 @@
 <aura:component implements="force:appHostable">
 
     <!-- component content -->
-    <div class="demo-container">
+    <div aura:id="container"
+            class="demo-container
+                   slds-hidden">
 
         <!-- page layout -->
         
