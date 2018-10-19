@@ -1,6 +1,6 @@
 # LTDemo
 
-Light Tools Demo Application.
+Light Tools Demo Application. [Try it now](https://lt-demo-developer-edition.ap5.force.com/)
 
 ## License
 
