@@ -49,6 +49,12 @@
         </div>
         <!-- /scroller -->
 
+        <!-- chart -->
+        <div class="slds-box">
+            <c:demoChart />
+        </div>
+        <!-- /chart -->
+
         <!-- /page layout -->
 
     </div>

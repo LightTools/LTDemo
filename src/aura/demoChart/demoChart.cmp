@@ -1,0 +1,58 @@
+<aura:component>
+
+    <!-- component variables -->
+    <aura:attribute name="charts" type="List" access="private" />
+    <!-- /component variables -->
+
+    <!-- component handlers  -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
+    <!-- /component handlers -->
+
+    <!-- component content -->
+    <div class="demo-chart">
+        <lightning:layout horizontalAlign="spread"
+                class="slds-text-heading_small
+                        slds-border_bottom
+                        slds-p-bottom_small
+                        slds-m-bottom_small">
+            <div>
+                Chart
+            </div>
+            <div>
+                Powered by 
+                <a href="https://www.chartjs.org/"
+                        target="_blank">
+                    Chart.js
+                </a>
+            </div>
+        </lightning:layout>
+        <aura:if isTrue="{! not(empty(v.charts)) }">
+            <lightning:tabset variant="vertical">
+                <aura:iteration items="{! v.charts }"
+                        var="chartConfig">
+                    <lightning:tab label="{! chartConfig.tabTitle }"
+                            id="{! chartConfig.type }">
+                        <aura:if isTrue="{! not(equals(chartConfig.type, 'showMore')) }">
+                            <div class="chart-container">
+                                <c:chart config="{! chartConfig }"/>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{! equals(chartConfig.type, 'showMore') }">
+                            <lightning:layout horizontalAlign="center"
+                                    verticalAlign="center"
+                                    class="show-more">
+                                <lightning:layoutItem>
+                                    <lightning:button label="I want to see more examples!"
+                                            variant="neutral"
+                                            onclick="{! c.showMore }" />
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+                    </lightning:tab>
+                </aura:iteration>
+            </lightning:tabset>
+        </aura:if>
+    </div>
+    <!-- /component content -->
+
+</aura:component>
