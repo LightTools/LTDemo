@@ -2,8 +2,7 @@
 
     <!-- component content -->
     <div aura:id="container"
-            class="demo-container
-                   slds-hidden">
+            class="demo-container">
 
         <!-- page layout -->
         

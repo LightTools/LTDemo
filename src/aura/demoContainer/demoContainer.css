@@ -1,10 +1,7 @@
 .THIS.demo-container {
-    transform: scale(0);
+    animation-name: scale, opacity;
+    animation-duration: 0.4s, 0.5s;
     transform-origin: 50% 0;
-    transition: transform 0.5s ease;
-}
-.THIS.demo-container:not(.slds-hidden) {
-    transform: scale(1);
 }
 .THIS.demo-container
 .label-hidden
@@ -18,3 +15,20 @@
 .THIS.demo-container>.slds-box {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+@keyframes scale {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@keyframes opacity {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
