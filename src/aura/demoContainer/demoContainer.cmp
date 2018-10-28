@@ -54,6 +54,12 @@
         </div>
         <!-- /chart -->
 
+        <!-- dynamic -->
+        <div class="slds-box">
+            <c:demoDynamic />
+        </div>
+        <!-- /dynamic -->
+
         <!-- /page layout -->
 
     </div>
