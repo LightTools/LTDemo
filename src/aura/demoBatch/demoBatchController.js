@@ -10,6 +10,5 @@
                 helper.abortBatch(component);
                 break;
         }
-
     }
 })
