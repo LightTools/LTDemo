@@ -1,0 +1,116 @@
+<aura:component>
+
+    <!-- component variables -->
+    <aura:attribute name="expanded" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="enableNubbin" type="Boolean" default="true" access="private"/>
+    <aura:attribute name="enableHeaderButton" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="enableFooterButton" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="title" type="String" default="Demo Section" access="private"/>
+    <aura:attribute name="message" type="String" access="private"/>
+    <aura:attribute name="timeout" type="Object" access="private"/>
+    <!-- component variables -->
+
+    <!-- component content -->
+    <div class="demo-section">
+        <div class="slds-text-heading_small
+                    slds-border_bottom
+                    slds-p-bottom_small
+                    slds-m-bottom_small">
+            Section
+        </div>
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem size="12"
+                    class="slds-form
+                           slds-form_stacked">
+
+                <!-- customizations -->
+
+                <lightning:input value="{! v.title }"
+                        label="Title" />
+
+                <lightning:input type="checkbox"
+                        label="{! join(' ', 'Toggle State', if (v.expanded, '(Expanded)', '(Collapsed)')) }"
+                        checked="{! v.expanded }" />
+
+                <lightning:input type="checkbox"
+                        label="Enable Nubbin"
+                        checked="{! v.enableNubbin }" />
+
+                <lightning:input type="checkbox"
+                        label="Enable Header Button"
+                        checked="{! v.enableHeaderButton }" />
+
+                <lightning:input type="checkbox"
+                        label="Enable Footer Button"
+                        checked="{! v.enableFooterButton }" />
+
+                <!-- /customizations -->
+
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12">
+
+                <c:section title="{! v.title }"
+                        nubbin="{! v.enableNubbin }"
+                        expanded="{! v.expanded }"
+                        ontoggle="{! c.sectionToggle }">
+
+                    <!-- section header -->
+                    <aura:set attribute="header">
+                        <aura:if isTrue="{! v.enableHeaderButton }">
+                            <div class="slds-p-horizontal_x-small">
+                                <lightning:buttonIcon 
+                                        iconName="utility:settings"
+                                        alternativeText="Header Button"
+                                        title="Header Button"
+                                        size="small"
+                                        variant="container"
+                                        onclick="{! c.buttonClick }" />
+                            </div>
+                        </aura:if>
+                    </aura:set>
+                    <!-- /section header -->
+
+                    <!-- section content -->
+                    <lightning:layout verticalAlign="center"
+                            horizontalAlign="center"
+                            class="demo-section_content
+                                   slds-text-title_caps">
+                        Section Content
+                    </lightning:layout>
+                    <!-- /section content -->
+
+                    <!-- section footer -->
+                    <aura:set attribute="footer">
+                        <aura:if isTrue="{! v.enableFooterButton }">
+                            <div class="slds-p-around_x-small">
+                                <lightning:buttonIcon 
+                                        iconName="utility:add"
+                                        alternativeText="Footer Button"
+                                        title="Footer Button"
+                                        size="medium"
+                                        variant="border"
+                                        onclick="{! c.buttonClick }" />
+                            </div>
+                        </aura:if>
+                    </aura:set>
+                    <!-- /section footer -->
+
+                </c:section>
+
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12">
+
+                <aura:if isTrue="{! not(empty(v.message)) }">
+                    <lightning:layout horizontalAlign="center"
+                                      class="slds-p-top_small
+                                             slds-p-horizontal_x-small">
+                        <lightning:badge label="{! v.message }"/>
+                    </lightning:layout>
+                </aura:if>
+
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    <!-- /component content -->
+
+</aura:component>

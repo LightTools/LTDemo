@@ -60,6 +60,12 @@
         </div>
         <!-- /dynamic -->
 
+        <!-- section -->
+        <div class="slds-box">
+            <c:demoSection />
+        </div>
+        <!-- /section -->
+
         <!-- /page layout -->
 
     </div>
