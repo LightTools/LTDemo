@@ -1,7 +1,7 @@
 .THIS.demo-container {
-    animation-name: scale, opacity;
-    animation-duration: 0.4s, 0.5s;
-    transform-origin: 50% 0;
+    animation-name: show, slide;
+    animation-duration: 1s, 1s;
+    animation-delay: 0s, 1s;
 }
 .THIS.demo-container
 .label-hidden
@@ -15,20 +15,23 @@
 .THIS.demo-container>.slds-box {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
-@keyframes scale {
+@keyframes show {
     from {
-        transform: scale(0);
-    }
-    to {
-        transform: scale(1);
-    }
-}
-@keyframes opacity {
-    from {
+        visibility: hidden;
         opacity: 0;
     }
     to {
-        opacity: 1;
+        visibility: visible;
+        opacity: 0;
     }
 }
-
+@keyframes slide {
+    from {
+        opacity: 0;
+        transform: translateY(-10rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
