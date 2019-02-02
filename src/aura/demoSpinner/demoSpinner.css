@@ -1,0 +1,22 @@
+.THIS.demo-spinner
+.slds-box {
+    padding: 0;
+    width: 6rem;
+    height: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    padding-bottom: 1rem;
+    position: relative;
+}
+.THIS.demo-spinner
+.slds-box>span {
+    position: absolute;
+    bottom: 0.25rem;
+}
+.THIS.demo-spinner
+.slds-vertical-tabs__content>div {
+    height: 100%;
+}

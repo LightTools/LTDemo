@@ -1,0 +1,104 @@
+<aura:component>
+
+    <!-- component content -->
+    <div class="demo-spinner">
+        <lightning:layout horizontalAlign="spread"
+                class="slds-text-heading_small
+                        slds-border_bottom
+                        slds-p-bottom_small
+                        slds-m-bottom_small">
+            <div>
+                Spinner
+            </div>
+            <div>
+                Powered by 
+                <a href="https://projects.lukehaas.me/css-loaders/"
+                        target="_blank">
+                    Luke Haas
+                </a>
+            </div>
+        </lightning:layout>
+
+        <lightning:tabset variant="vertical">
+            
+            <lightning:tab label="Circle Dots">
+                <lightning:layout multipleRows="true"
+                        horizontalAlign="center"
+                        verticalAlign="center">
+                    <div class="slds-box">
+                        <c:spinner size="small" />
+                        <span>small</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner />
+                        <span>medium</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner size="large" />
+                        <span>large</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner size="x-large" />
+                        <span>x-large</span>
+                    </div>
+                </lightning:layout>
+            </lightning:tab>
+
+            <lightning:tab label="Circle">
+                <lightning:layout multipleRows="true"
+                        horizontalAlign="center"
+                        verticalAlign="center">
+                    <div class="slds-box">
+                        <c:spinner size="small"
+                                type="circle" />
+                        <span>small</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner type="circle" />
+                        <span>medium</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner size="large"
+                                type="circle" />
+                        <span>large</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner size="x-large"
+                                type="circle" />
+                        <span>x-large</span>
+                    </div>
+                </lightning:layout>
+            </lightning:tab>
+
+            <lightning:tab label="Dots">
+                <lightning:layout multipleRows="true"
+                        horizontalAlign="center"
+                        verticalAlign="center">
+                    <div class="slds-box">
+                        <c:spinner size="small"
+                                type="dots" />
+                        <span>small</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner type="dots" />
+                        <span>medium</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner size="large"
+                                type="dots" />
+                        <span>large</span>
+                    </div>
+                    <div class="slds-box">
+                        <c:spinner size="x-large"
+                                type="dots" />
+                        <span>x-large</span>
+                    </div>
+                </lightning:layout>
+            </lightning:tab>
+
+        </lightning:tabset>
+
+    </div>
+    <!-- /component content -->
+
+</aura:component>
