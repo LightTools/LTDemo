@@ -1,36 +1,35 @@
-<aura:component>
+<aura:component extends="c:demoContainerItem">
 
     <!-- component variables -->
-    <aura:attribute name="expanded" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="isExpanded" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableNubbin" type="Boolean" default="true" access="private"/>
     <aura:attribute name="enableHeaderButton" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableFooterButton" type="Boolean" default="false" access="private"/>
-    <aura:attribute name="title" type="String" default="Demo Section" access="private"/>
+    <aura:attribute name="sectionTitle" type="String" default="Demo Section" access="private"/>
     <aura:attribute name="message" type="String" access="private"/>
     <aura:attribute name="timeout" type="Object" access="private"/>
     <!-- component variables -->
 
-    <!-- component content -->
+    <!-- component handlers  -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
+    <!-- /component handlers -->
+
+    <!-- component body -->
     <div class="demo-section">
-        <div class="slds-text-heading_small
-                    slds-border_bottom
-                    slds-p-bottom_small
-                    slds-m-bottom_small">
-            Section
-        </div>
-        <lightning:layout multipleRows="true">
+        <lightning:layout multipleRows="true"
+                class="slds-p-around_small">
             <lightning:layoutItem size="12"
                     class="slds-form
                            slds-form_stacked">
 
                 <!-- customizations -->
 
-                <lightning:input value="{! v.title }"
+                <lightning:input value="{! v.sectionTitle }"
                         label="Title" />
 
                 <lightning:input type="checkbox"
-                        label="{! join(' ', 'Toggle State', if (v.expanded, '(Expanded)', '(Collapsed)')) }"
-                        checked="{! v.expanded }" />
+                        label="{! join(' ', 'Toggle State', if (v.isExpanded, '(Expanded)', '(Collapsed)')) }"
+                        checked="{! v.isExpanded }" />
 
                 <lightning:input type="checkbox"
                         label="Enable Nubbin"
@@ -47,11 +46,21 @@
                 <!-- /customizations -->
 
             </lightning:layoutItem>
+            <lightning:layoutItem size="12"
+                    class="slds-is-relative">
+
+                <aura:if isTrue="{! not(empty(v.message)) }">
+                    <lightning:badge label="{! v.message }"
+                            class="slds-is-absolute
+                                   demo-section-message"/>
+                </aura:if>
+
+            </lightning:layoutItem>
             <lightning:layoutItem size="12">
 
-                <c:section title="{! v.title }"
+                <c:section title="{! v.sectionTitle }"
                         nubbin="{! v.enableNubbin }"
-                        expanded="{! v.expanded }"
+                        expanded="{! v.isExpanded }"
                         ontoggle="{! c.sectionToggle }">
 
                     <!-- section header -->
@@ -98,19 +107,8 @@
                 </c:section>
 
             </lightning:layoutItem>
-            <lightning:layoutItem size="12">
-
-                <aura:if isTrue="{! not(empty(v.message)) }">
-                    <lightning:layout horizontalAlign="center"
-                                      class="slds-p-top_small
-                                             slds-p-horizontal_x-small">
-                        <lightning:badge label="{! v.message }"/>
-                    </lightning:layout>
-                </aura:if>
-
-            </lightning:layoutItem>
         </lightning:layout>
     </div>
-    <!-- /component content -->
+    <!-- /component body -->
 
 </aura:component>

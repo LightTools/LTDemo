@@ -1,4 +1,16 @@
-.THIS.demo-database
+.THIS.lt-section
+.demo-database
 .slds-textarea {
     height: 15rem;
+}
+.THIS.lt-section
+.demo-database
+.slds-tabs_default__content {
+    padding: 0;
+}
+.THIS.lt-section
+.demo-database
+.slds-vertical-tabs {
+    border: none;
+    border-radius: 0;
 }

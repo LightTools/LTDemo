@@ -1,4 +1,8 @@
 ({
+    initialize : function(component, event, helper) {
+        // set title
+        component.set("v.title", "Section");
+    },
     sectionToggle : function(component, event, helper) {
         event.stopPropagation();
         // show message

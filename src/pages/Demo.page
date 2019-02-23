@@ -1,6 +1,7 @@
 <apex:page title="Light Tools Demo"
            sidebar="false"
            showHeader="{! NOT(ISPICKVAL($User.UserType, 'Guest')) }">
+    <apex:includeLightning />
     <style>
         div.bodyDiv {
             overflow: hidden;
@@ -12,17 +13,23 @@
         td.noSidebarCell {
             padding: 0;
         }
+        body>#demoApp {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
         #demoApp {
             display: table;
             table-layout: fixed;
             width: 100%;
-            background: rgb(252, 252, 252);
+            overflow: hidden;
         }
         #demoApp>* {
             padding: 0.75rem;
         }
     </style>
-    <apex:includeLightning />
     <div id="demoApp" />
     <script>
         $Lightning.use("c:demoApp", function() {

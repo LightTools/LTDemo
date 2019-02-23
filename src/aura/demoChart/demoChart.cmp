@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component extends="c:demoContainerItem">
 
     <!-- component variables -->
     <aura:attribute name="charts" type="List" access="private" />
@@ -8,24 +8,20 @@
     <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
     <!-- /component handlers -->
 
-    <!-- component content -->
+    <!-- component header -->
+    <aura:set attribute="header">
+        <div class="slds-p-horizontal_small">
+            Powered by 
+            <a href="https://www.chartjs.org/"
+                    target="_blank">
+                Chart.js
+            </a>
+        </div>
+    </aura:set>
+    <!-- /component header -->
+
+    <!-- component body -->
     <div class="demo-chart">
-        <lightning:layout horizontalAlign="spread"
-                class="slds-text-heading_small
-                        slds-border_bottom
-                        slds-p-bottom_small
-                        slds-m-bottom_small">
-            <div>
-                Chart
-            </div>
-            <div>
-                Powered by 
-                <a href="https://www.chartjs.org/"
-                        target="_blank">
-                    Chart.js
-                </a>
-            </div>
-        </lightning:layout>
         <aura:if isTrue="{! not(empty(v.charts)) }">
             <lightning:tabset variant="vertical">
                 <aura:iteration items="{! v.charts }"

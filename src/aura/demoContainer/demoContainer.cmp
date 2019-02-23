@@ -1,14 +1,22 @@
 <aura:component implements="force:appHostable">
 
+    <!-- component variables -->
+    <aura:attribute name="photoURL" type="String" access="private" />
+    <aura:attribute name="demoItems" type="List" access="private" />
+    <!-- /component variables -->
+
     <!-- component content -->
     <div class="demo-container">
 
-        <!-- page layout -->
-        
+        <!-- background -->
+        <div class="demo-container-background" />
+        <!-- /background -->
+
         <!-- header -->
         <lightning:layout class="slds-box
                                  slds-page-header
-                                 slds-border_bottom"
+                                 slds-border_bottom
+                                 demo-container-header"
                 horizontalAlign="spread"
                 verticalAlign="center">
             <div>
@@ -28,50 +36,47 @@
             </div>
         </lightning:layout>
         <!-- /header -->
-     
-        <!-- database -->
-        <div class="slds-box">
-            <c:demoDatabase />
+        
+        <!-- content -->
+        <div aura:id="content" class="demo-container-content">
+            <lightning:layout class="demo-container-content_spinner
+                                     slds-p-around_small"
+                    horizontalAlign="center">
+                <c:spinner />
+            </lightning:layout>
+            <div class="demo-container-content_items">
+                <c:dynamic config="{! v.demoItems }"
+                        onchange="{! c.handleContentChange }" />
+            </div>
         </div>
-        <!-- /database -->
+        <!-- /content -->
 
-        <!-- batch -->
-        <div class="slds-box">
-            <c:demoBatch />
-        </div>
-        <!-- /batch -->
-
-        <!-- scroller -->
-        <div class="slds-box">
-            <c:demoScroller />
-        </div>
-        <!-- /scroller -->
-
-        <!-- chart -->
-        <div class="slds-box">
-            <c:demoChart />
-        </div>
-        <!-- /chart -->
-
-        <!-- dynamic -->
-        <div class="slds-box">
-            <c:demoDynamic />
-        </div>
-        <!-- /dynamic -->
-
-        <!-- section -->
-        <div class="slds-box">
-            <c:demoSection />
-        </div>
-        <!-- /section -->
-
-        <!-- spinner -->
-        <div class="slds-box">
-            <c:demoSpinner />
-        </div>
-        <!-- /spinner -->
-
-        <!-- /page layout -->
+        <!-- footer -->
+        <lightning:layout class="demo-container-footer">
+            <lightning:layoutItem size="12">
+                <lightning:layout horizontalAlign="center">
+                    <span class="demo-container-footer_nubbin"/>
+                </lightning:layout>
+                <lightning:layout class="slds-p-around_medium">
+                    <lightning:layoutItem size="12">
+                        <lightning:layout horizontalAlign="start"
+                                verticalAlign="center"
+                                class="slds-truncate">
+                            <lightning:avatar src="{! v.photoURL }"
+                                    alternativeText="Photo"
+                                    variant="circle"
+                                    size="medium"
+                                    fallbackIconName="standard:avatar_loading"/>
+                            <span class="slds-truncate
+                                         slds-p-horizontal_x-small">
+                                Created by Sergey Chepurnenko
+                            </span>
+                        </lightning:layout>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <!-- /footer -->
 
     </div>
     <!-- /component content -->

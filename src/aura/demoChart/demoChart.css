@@ -1,11 +1,20 @@
-.THIS.demo-chart {
+.THIS.lt-section
+.demo-chart {
     min-height: 16rem;
 }
-.THIS.demo-chart
+.THIS.lt-section
+.demo-chart
 .chart-container {
     padding: 0 20%;
 }
-.THIS.demo-chart
+.THIS.lt-section
+.demo-chart
 .show-more {
     height: 100%;
+}
+.THIS.lt-section
+.demo-chart
+.slds-vertical-tabs {
+    border: none;
+    border-radius: 0;
 }

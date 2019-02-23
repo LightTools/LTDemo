@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component extends="c:demoContainerItem">
 
     <!-- component variables -->
 
@@ -35,19 +35,12 @@
     <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
     <!-- /component handlers -->
 
-    <!-- component content -->
+    <!-- include components -->
+    <c:database aura:id="database" />
+    <!-- /include components -->
+
+    <!-- component body -->
     <div class="demo-database">
-
-        <!-- include components -->
-        <c:database aura:id="database" />
-        <!-- /include components -->
-
-        <div class="slds-text-heading_small
-                    slds-border_bottom
-                    slds-p-bottom_small
-                    slds-m-bottom_small">
-            Database
-        </div>
         <lightning:tabset >
 
             <!-- Describe -->
@@ -209,6 +202,6 @@
 
         </lightning:tabset>
     </div>
-    <!-- /component content -->
+    <!-- /component body -->
 
 </aura:component>

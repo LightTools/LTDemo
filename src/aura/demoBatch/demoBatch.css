@@ -1,9 +1,11 @@
-.THIS.demo-batch
+.THIS.lt-section
+.demo-batch
 .textarea-debug
 .slds-textarea {
     height: 15rem;
 }
-.THIS.demo-batch
+.THIS.lt-section
+.demo-batch
 .select-chunk {
     display: flex;
     align-items: center;

@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component extends="c:demoContainerItem">
 
     <!-- component variables -->
     <aura:attribute name="dummyText" type="List" access="private"/>
@@ -10,15 +10,10 @@
     <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
     <!-- /component handlers -->
 
-    <!-- component content -->
+    <!-- component body -->
     <div class="demo-scroller">
-        <div class="slds-text-heading_small
-                    slds-border_bottom
-                    slds-p-bottom_small
-                    slds-m-bottom_small">
-            Scroller
-        </div>
-        <lightning:layout multipleRows="true">
+        <lightning:layout multipleRows="true"
+                class="slds-p-around_small">
             <lightning:layoutItem size="12">
                 <c:scroller aura:id="scroller"
                         class="slds-box"
@@ -66,6 +61,6 @@
             </lightning:layoutItem>
         </lightning:layout>
     </div>
-    <!-- /component content -->
+    <!-- /component body -->
 
 </aura:component>

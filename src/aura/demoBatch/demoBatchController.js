@@ -1,4 +1,8 @@
 ({
+    initialize : function(component, event, helper) {
+        // set title
+        component.set("v.title", "Batch");
+    },
     action : function(component, event, helper) {
         let sender = event.getSource();
         // select action

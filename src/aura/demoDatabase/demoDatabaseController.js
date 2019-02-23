@@ -1,5 +1,8 @@
 ({
     initialize : function(component, event, helper) {
+        // set title
+        component.set("v.title", "Database");
+        // set config
         helper.setDefaults(component);
     },
     action : function(component, event, helper) {

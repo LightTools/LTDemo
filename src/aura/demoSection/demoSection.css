@@ -1,4 +1,11 @@
-.THIS.demo-section
+.THIS.lt-section
+.demo-section
 .demo-section_content {
     height: 10rem;
+}
+.THIS.lt-section
+.demo-section
+.demo-section-message {
+    right: 0;
+    bottom: 0.5rem;
 }

@@ -1,4 +1,5 @@
-.THIS.demo-spinner
+.THIS.lt-section
+.demo-spinner
 .slds-box {
     padding: 0;
     width: 6rem;
@@ -11,12 +12,20 @@
     padding-bottom: 1rem;
     position: relative;
 }
-.THIS.demo-spinner
+.THIS.lt-section
+.demo-spinner
 .slds-box>span {
     position: absolute;
     bottom: 0.25rem;
 }
-.THIS.demo-spinner
+.THIS.lt-section
+.demo-spinner
 .slds-vertical-tabs__content>div {
     height: 100%;
+}
+.THIS.lt-section
+.demo-spinner
+.slds-vertical-tabs {
+    border: none;
+    border-radius: 0;
 }

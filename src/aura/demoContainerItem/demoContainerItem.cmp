@@ -1,0 +1,20 @@
+<aura:component extends="c:section"
+                extensible="true">
+
+    <!-- component variables -->
+    <aura:attribute name="renderBody" type="Boolean" default="false" access="private" />
+    <!-- component variables -->
+
+    <!-- component handlers  -->
+    <aura:handler name="change" value="{! v.expanded }" action="{! c.handleState }" />
+    <!-- /component handlers -->
+
+    <!-- component content -->
+    <aura:set attribute="body">
+        <aura:if isTrue="{! v.renderBody }">
+            {! v.body }
+        </aura:if>
+    </aura:set>
+    <!-- /component content -->
+
+</aura:component>

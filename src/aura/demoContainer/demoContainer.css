@@ -1,20 +1,106 @@
 .THIS.demo-container {
-    animation-name: show, slide;
-    animation-duration: 1s, 1s;
-    animation-delay: 0s, 1s;
+    margin-bottom: 2rem;
 }
 .THIS.demo-container
 .label-hidden
 .slds-form-element__label {
     display: none;
 }
-.THIS.demo-container>.slds-box:not(.slds-page-header) {
-    margin-top: 0.75rem;
-    background: rgb(255, 255, 255);
+.THIS.demo-container
+.demo-container-background {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(252, 252, 252);
 }
-.THIS.demo-container>.slds-box {
+.THIS.demo-container
+.demo-container-header {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    animation-name: show, slide-header;
+    animation-duration: 1s, 1s;
+    animation-delay: 0s, 1s;
+    position: relative;
+    z-index: 2;
 }
+.THIS.demo-container
+.demo-container-content {
+    min-height: 20rem;
+    animation-name: show;
+    animation-duration: 2s;
+    position: relative;
+    z-index: 1;
+}
+.THIS.demo-container
+.demo-container-content
+.demo-container-content_items {
+    opacity: 0;
+}
+.THIS.demo-container
+.demo-container-content.ready
+.demo-container-content_spinner {
+    display: none;
+}
+.THIS.demo-container
+.demo-container-content.ready
+.demo-container-content_items {
+    animation-name: slide-content;
+    animation-duration: 1s;
+    opacity: 1;
+}
+.THIS.demo-container
+.demo-container-footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2rem;
+    background: rgb(21, 50, 92);
+    color: rgb(252, 252, 252);
+    z-index: 3;
+    opacity: 1;
+    overflow: hidden;
+    transition: height 0.5s,
+                opacity 0.5s,
+                box-shadow 0.5s;
+    transition-delay: 0.2s;
+    transform: translateZ(0);
+    animation-name: show, slide-footer;
+    animation-duration: 2s, 1s;
+    animation-delay: 0s, 2s;
+}
+.THIS.demo-container
+.demo-container-footer:hover {
+    height: 6rem;
+    opacity: 0.95;
+    box-shadow: 0 0 10px rgba(21, 50, 92, 0.8);
+}
+.THIS.demo-container
+.demo-container-footer>div {
+    transform: translateY(0);
+    transition: transform 0.7s;
+    transition-delay: 0.2s;
+}
+.THIS.demo-container
+.demo-container-footer:hover>div {
+    transform: translateY(-2rem);
+}
+.THIS.demo-container
+.demo-container-footer
+.demo-container-footer_nubbin {
+    height: 2rem;
+    width: 2rem;
+    background: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCIgdmlld0JveD0iMCAwIDQ1MS44NDYgNDUxLjg0NyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDUxLjg0NiA0NTEuODQ3OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxnPgoJPHBhdGggZD0iTTM0NS40NDEsMjQ4LjI5MkwxNTEuMTU0LDQ0Mi41NzNjLTEyLjM1OSwxMi4zNjUtMzIuMzk3LDEyLjM2NS00NC43NSwwYy0xMi4zNTQtMTIuMzU0LTEyLjM1NC0zMi4zOTEsMC00NC43NDQgICBMMjc4LjMxOCwyMjUuOTJMMTA2LjQwOSw1NC4wMTdjLTEyLjM1NC0xMi4zNTktMTIuMzU0LTMyLjM5NCwwLTQ0Ljc0OGMxMi4zNTQtMTIuMzU5LDMyLjM5MS0xMi4zNTksNDQuNzUsMGwxOTQuMjg3LDE5NC4yODQgICBjNi4xNzcsNi4xOCw5LjI2MiwxNC4yNzEsOS4yNjIsMjIuMzY2QzM1NC43MDgsMjM0LjAxOCwzNTEuNjE3LDI0Mi4xMTUsMzQ1LjQ0MSwyNDguMjkyeiIgZmlsbD0iI0ZGRkZGRiIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=) center center no-repeat;
+    transform: rotate(-90deg);
+}
+.THIS.demo-container
+.demo-container-footer
+.slds-avatar {
+    flex-shrink: 0;
+}
+
 @keyframes show {
     from {
         visibility: hidden;
@@ -25,10 +111,30 @@
         opacity: 0;
     }
 }
-@keyframes slide {
+@keyframes slide-header {
     from {
         opacity: 0;
         transform: translateY(-10rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes slide-content {
+    from {
+        opacity: 0;
+        transform: translateY(-5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes slide-footer {
+    from {
+        opacity: 0;
+        transform: translateY(2rem);
     }
     to {
         opacity: 1;

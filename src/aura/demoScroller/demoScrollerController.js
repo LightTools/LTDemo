@@ -1,5 +1,8 @@
 ({
     initialize : function(component, event, helper) {
+        // set title
+        component.set("v.title", "Scroller");
+        // set config
         helper.setDefaults(component);
     },
     handleScroll : function(component, event) {

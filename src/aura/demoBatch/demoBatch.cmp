@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component extends="c:demoContainerItem">
 
     <!-- component variables -->
     <aura:attribute name="scope" type="String" default="Saul Daly, Corey Mathis, Jace Mcgrath, Lisa-Marie Major, Darien Ferreira, Ishaq Branch, Ahyan Vinson, Floyd Emerson, Saskia Mcnamara, Heidi Byrd" access="private" />
@@ -7,20 +7,18 @@
     <aura:attribute name="runned" type="Boolean" default="false" access="private" />
     <!-- /component variables -->
 
-    <!-- component content -->
+    <!-- component handlers  -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
+    <!-- /component handlers -->
+
+    <!-- include components -->
+    <c:batch aura:id="batch" />
+    <!-- /include components -->
+
+    <!-- component body -->
     <div class="demo-batch">
-
-        <!-- include components -->
-        <c:batch aura:id="batch" />
-        <!-- /include components -->
-
-        <div class="slds-text-heading_small
-                    slds-border_bottom
-                    slds-p-bottom_small
-                    slds-m-bottom_small">
-            Batch
-        </div>
-        <lightning:layout multipleRows="true">
+        <lightning:layout multipleRows="true"
+                class="slds-p-around_small">
             <lightning:layoutItem size="12"
                     class="slds-m-bottom_small">
                 <lightning:textarea value="{! v.scope }"
@@ -61,6 +59,6 @@
             </lightning:layoutItem>
         </lightning:layout>
     </div>
-    <!-- /component content -->
+    <!-- /component body -->
 
 </aura:component>

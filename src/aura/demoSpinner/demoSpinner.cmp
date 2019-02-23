@@ -1,24 +1,23 @@
-<aura:component>
+<aura:component extends="c:demoContainerItem">
 
-    <!-- component content -->
+    <!-- component handlers  -->
+    <aura:handler name="init" value="{! this }" action="{! c.initialize }"/>
+    <!-- /component handlers -->
+
+    <!-- component header -->
+    <aura:set attribute="header">
+        <div class="slds-p-horizontal_small">
+            Powered by 
+            <a href="https://projects.lukehaas.me/css-loaders/"
+                    target="_blank">
+                Luke Haas
+            </a>
+        </div>
+    </aura:set>
+    <!-- /component header -->
+
+    <!-- component body -->
     <div class="demo-spinner">
-        <lightning:layout horizontalAlign="spread"
-                class="slds-text-heading_small
-                        slds-border_bottom
-                        slds-p-bottom_small
-                        slds-m-bottom_small">
-            <div>
-                Spinner
-            </div>
-            <div>
-                Powered by 
-                <a href="https://projects.lukehaas.me/css-loaders/"
-                        target="_blank">
-                    Luke Haas
-                </a>
-            </div>
-        </lightning:layout>
-
         <lightning:tabset variant="vertical">
             
             <lightning:tab label="Circle Dots">
@@ -97,8 +96,7 @@
             </lightning:tab>
 
         </lightning:tabset>
-
     </div>
-    <!-- /component content -->
+    <!-- /component body -->
 
 </aura:component>
