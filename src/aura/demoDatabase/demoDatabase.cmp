@@ -29,6 +29,11 @@
     <aura:attribute name="databaseRemoveResponse" type="String" access="private"/>
     <!-- /database remove -->
 
+    <!-- database restore -->
+    <aura:attribute name="databaseRestoreConfig" type="String" access="private"/>
+    <aura:attribute name="databaseRestoreResponse" type="String" access="private"/>
+    <!-- /database restore -->
+
     <!-- /component variables -->
 
     <!-- component handlers  -->
@@ -199,6 +204,35 @@
                 </lightning:tabset>
             </lightning:tab>
             <!-- /Remove -->
+
+            <!-- Restore -->
+            <lightning:tab label="Restore">
+                <lightning:tabset variant="vertical">
+                    <lightning:tab label="Config">
+                        <lightning:layout multipleRows="true">
+                            <lightning:layoutItem size="12">
+                                <lightning:textarea value="{! v.databaseRestoreConfig }"
+                                        label="Config"
+                                        class="label-hidden" />
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12"
+                                    class="slds-p-vertical_x-small">
+                                <lightning:button label="Restore"
+                                        name="databaseRestore"
+                                        onclick="{! c.action }"
+                                        class="slds-float_right" />
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:tab>
+                    <lightning:tab label="Response">
+                        <lightning:textarea value="{! v.databaseRestoreResponse }"
+                                label="Response"
+                                class="label-hidden"
+                                readonly="true" />
+                    </lightning:tab>
+                </lightning:tabset>
+            </lightning:tab>
+            <!-- /Restore -->
 
         </lightning:tabset>
     </div>

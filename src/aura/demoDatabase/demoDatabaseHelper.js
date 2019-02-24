@@ -86,7 +86,18 @@
                     "<recordId>"
                 ],
                 "crud": true,
-                "fls": true,
+                "sharing": true
+            }, null, 4)
+        );
+        // set default config for database restore
+        component.set(
+            "v.databaseRestoreConfig",
+            JSON.stringify({
+                "items": [
+                    "<recordId>",
+                    "<recordId>"
+                ],
+                "crud": true,
                 "sharing": true
             }, null, 4)
         );

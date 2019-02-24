@@ -116,6 +116,22 @@
                     }.bind(helper))
                 );
                 break;
+            case "databaseRestore":
+                component.find("database").restore(
+                    JSON.parse(component.get("v.databaseRestoreConfig")),
+                    $A.getCallback(function(response) {
+                        if (component.isValid()) {
+                            // set restore result
+                            component.set(
+                                "v.databaseRestoreResponse",
+                                this.parseResponse(response)
+                            );
+                            // hide spinner
+                            this.toggleSpinner(sender, false);
+                        }
+                    }.bind(helper))
+                );
+                break;
         }
     }
 })
